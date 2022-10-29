@@ -1,4 +1,4 @@
 """DoHome Lights controlling module"""
 
-from .discovery import discover_lights
+from .gateway import DoHomeGateway
 from .light import DoHomeLight
