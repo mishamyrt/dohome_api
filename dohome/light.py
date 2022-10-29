@@ -101,7 +101,6 @@ class DoHomeLight():
     async def set_white(self, mireds: int, brightness = 255):
         """Sets white temperature to the device"""
         white_percent = self._temp.to_uint8(mireds) / 255
-        print(white_percent)
         warm_white = 5000 * white_percent
         return await self._send_request(
             format_light_request(
