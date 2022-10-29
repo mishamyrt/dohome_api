@@ -27,4 +27,4 @@ def format_request(sid: str, cmd: int, payload = None) -> str:
     if payload is None:
         payload = {}
     payload["cmd"] = cmd
-    return f"cmd=ctrl&devices={[{sid}]}&op={dumps(payload)}"
+    return f"cmd=ctrl&devices=[{sid}]&op={dumps(payload)}"
