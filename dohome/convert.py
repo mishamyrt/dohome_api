@@ -18,13 +18,29 @@ def dohome_state_to_uint8(raw_state: dict) -> dict:
         raw_state[key] = dohome_to_uint8(raw_state[key])
     return raw_state
 
-def mireds_to_uint8(mireds: int, mireds_min: int, mireds_max: int) -> int:
-    """Converts mireds to uint8"""
-    ranged_temp = mireds - mireds_min
-    percent = ranged_temp / mireds_max
-    return int(255 * percent)
+def apply_brightness(value: int, brightness_uint8: int) -> int:
+    """Applies brightness to the value"""
+    brightness_percent = brightness_uint8 / 255
+    return int(value * brightness_percent)
 
-def uint8_to_mireds(byte_temp: int, mireds_min: int, mireds_max: int) -> int:
-    """Converts uint8 to mireds"""
-    percent = byte_temp / 255
-    return int(percent *  mireds_max) + mireds_min
+class MiredsConverter:
+    """Mireds to/from uint8 converter"""
+    # pylint: disable=invalid-name
+    _MIN = 0
+    _MAX = 0
+    _RANGE = 0
+
+    def __init__(self, mireds_min: int, mireds_max: int):
+        self._MIN = mireds_min
+        self._MAX = mireds_max
+        self._RANGE = mireds_max - mireds_min
+
+    def to_uint8(self, mireds: int) -> int:
+        """Converts mireds to uint8"""
+        percent = (mireds - self._MIN) / self._RANGE
+        return int(255 * percent)
+
+    def to_mireds(self, uint8_temp: int) -> int:
+        """Converts uint8 to mireds"""
+        percent = uint8_temp / 255
+        return int(percent * self._RANGE) + self._MIN

@@ -1,7 +1,12 @@
 """DoHome api example"""
 
 from asyncio import run
+from logging import getLogger, basicConfig, DEBUG
 from dohome import DoHomeLight, discover_lights
+
+basicConfig(level=DEBUG)
+
+_LOGGER = getLogger(__file__)
 
 SEARCH_TIMEOUT = 2
 DISCOVERY_HOST = "192.168.31.255"
@@ -15,6 +20,7 @@ async def main():
         light = DoHomeLight(descr["sid"], descr["sta_ip"])
         await light.connect()
         state = await light.get_state()
+        await light.set_white(350, 100)
         print(f"State: {state}")
     print(f"Done. Found {len(descriptions)} lights")
 
