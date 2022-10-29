@@ -2,7 +2,8 @@
 
 from socket import getfqdn, gethostname, gethostbyname_ex
 from typing import List
-from .constants import API_PORT, CMD_PING
+from .commands import REQUEST_PING
+from .constants import API_PORT
 from .datagram import open_broadcast
 
 def _apply_mask(local_address: str, mask: str) -> str:
@@ -41,11 +42,11 @@ async def discover_lights(host: str = None, timeout = 2.0) -> List[dict]:
     if host is None:
         host = _get_discovery_host()
     broadcast = await open_broadcast((host, API_PORT))
-    broadcast.send(CMD_PING)
+    broadcast.send(REQUEST_PING)
     responses = await broadcast.receive(timeout)
     descriptions = []
     for response in responses:
         message = response.decode("utf-8")
-        if message.startswith('cmd=pong'):
+        if message.startswith("cmd=pong"):
             descriptions.append(_parse_pong(message))
     return descriptions

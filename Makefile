@@ -7,5 +7,5 @@ configure:
 clean:
 	rm -rf $(VENV_PATH)
 lint:
-	$(VENV) pylint .
+	$(VENV) pylint ./dohome
 

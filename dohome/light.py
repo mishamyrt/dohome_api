@@ -1,18 +1,19 @@
 """DoHome light controller"""
 
 from json import loads
+from typing import Final
 from .datagram import open_endpoint
 from .convert import (
-    dohome_from_uint8,
-    uint8_state_from_dohome,
+    uint8_to_dohome,
+    dohome_state_to_uint8,
     uint8_to_mireds
 )
 from .commands import (
     CMD_GET_STATE,
     CMD_GET_TIME,
     CMD_SET_POWER,
-    format_command,
-    format_light_payload
+    format_request,
+    format_light_request
 )
 from .constants import (
     API_PORT,
@@ -20,13 +21,16 @@ from .constants import (
 
 class DoHomeLight():
     """DoHome light controller class"""
-    _sid = ''
-    _addr = ''
+    SID: Final = ''
+    HOST = ''
+    MIREDS_MIN: Final = 166
+    MIREDS_MAX: Final = 400
     _conn = None
 
-    def __init__(self, sid: str, addr: str):
-        self._sid = sid
-        self._addr = addr
+    def __init__(self, sid: str, host: str):
+        # pylint: disable=invalid-name
+        self.SID = sid
+        self.HOST = host
 
     @property
     def connected(self):
@@ -38,14 +42,14 @@ class DoHomeLight():
         if self.connected:
             self._conn.close()
         self._conn = await open_endpoint(
-            self._addr,
+            self.HOST,
             API_PORT
         )
 
     async def get_state(self) -> dict:
         """Reads high-level state from the device"""
         raw_state = await self.get_raw_state()
-        uint8_state = uint8_state_from_dohome(raw_state)
+        uint8_state = dohome_state_to_uint8(raw_state)
         summ = 0
         state = {
             "enabled": False,
@@ -67,36 +71,36 @@ class DoHomeLight():
         if summ > 0:
             state["enabled"] = True
             state["mode"] = "white"
-            state["mireds"] = uint8_to_mireds(uint8_state["m"])
+            state["mireds"] = uint8_to_mireds(uint8_state["m"], self.MIREDS_MIN, self.MIREDS_MAX)
         return state
 
     async def get_raw_state(self):
         """Reads color from the device"""
         return await self._send_command(
-            format_command(self._sid, CMD_GET_STATE)
+            format_request(self.SID, CMD_GET_STATE)
         )
 
     async def get_time(self):
         """Reads time from the device"""
         await self._send_command(
-            format_command(self._sid, CMD_GET_TIME)
+            format_request(self.SID, CMD_GET_TIME)
         )
 
     async def set_enabled(self, enabled: bool):
         """Turns the device off"""
         return await self._send_command(
-            format_command(self._sid, CMD_SET_POWER, { "op": 1 if enabled else 0 })
+            format_request(self.SID, CMD_SET_POWER, { "op": 1 if enabled else 0 })
         )
 
     # pylint: disable-next=invalid-name
     async def set_rgb(self, r: int, g: int, b: int):
         """Sets RGB color to the device"""
         return await self._send_command(
-            format_light_payload(
-                self._sid,
-                dohome_from_uint8(r),
-                dohome_from_uint8(g),
-                dohome_from_uint8(b),
+            format_light_request(
+                self.SID,
+                uint8_to_dohome(r),
+                uint8_to_dohome(g),
+                uint8_to_dohome(b),
             )
         )
 
