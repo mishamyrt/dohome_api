@@ -113,13 +113,12 @@ class DoHomeLight():
     # pylint: disable-next=invalid-name
     async def set_rgb(self, r: int, g: int, b: int, brightness = 255):
         """Sets RGB color to the device"""
-        brightness_percent = brightness / 255
         return await self._send_request(
             format_light_request(
                 self.SID,
-                uint8_to_dohome(r) * brightness_percent,
-                uint8_to_dohome(g) * brightness_percent,
-                uint8_to_dohome(b) * brightness_percent,
+                apply_brightness(uint8_to_dohome(r), brightness),
+                apply_brightness(uint8_to_dohome(g), brightness),
+                apply_brightness(uint8_to_dohome(b), brightness)
             )
         )
 
