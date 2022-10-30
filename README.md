@@ -1,6 +1,6 @@
 # DoHome API
 
-Library for controlling smart bulbs that are controlled by the DoIT protocol (DoHome app).
+Library for controlling smart bulbs that work using the DoIT protocol (DoHome app).
 
 ## Installation
 
