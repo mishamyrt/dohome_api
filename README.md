@@ -5,7 +5,7 @@ Library for controlling smart bulbs that are controlled by the DoIT (DoHome app)
 ## Installation
 
 ```
-pip install dohome-api==0.0.2
+pip install dohome-api
 ```
 
 ## Usage
