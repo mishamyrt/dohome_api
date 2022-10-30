@@ -1,4 +1,4 @@
-# DoHome API
+# DoHome API [![Quality assurance](https://github.com/mishamyrt/dohome_api/actions/workflows/qa.yaml/badge.svg)](https://github.com/mishamyrt/dohome_api/actions/workflows/qa.yaml)
 
 Library for controlling smart bulbs that work using the DoIT protocol (DoHome app).
 
