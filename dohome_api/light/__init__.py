@@ -16,6 +16,7 @@ from .brightness import apply_brightness
 from .temperature import TemperatureConverter
 from .uint8 import (
     dohome_state_to_uint8,
+    dohome_to_uint8,
     uint8_to_dohome
 )
 
@@ -50,7 +51,8 @@ class DoHomeLight():
             "enabled": False,
             "mode": "none", # none, rgb, white
             "rgb": [0, 0, 0],
-            "mireds": 0
+            "mireds": 0,
+            "brightness": 0
         }
         for color in ["r", "g", "b"]:
             summ += uint8_state[color]
@@ -60,13 +62,21 @@ class DoHomeLight():
             state["rgb"] = [
                 uint8_state["r"], uint8_state["g"], uint8_state["b"]
             ]
+            # Unfortunately, I have not found a way
+            # to reliably determine brightness from RGB
+            state["brightness"] = 255
             return state
         for temp in ["w", "m"]:
             summ += uint8_state[temp]
         if summ > 0:
             state["enabled"] = True
             state["mode"] = "white"
-            state["mireds"] = self._temp.to_mireds(uint8_state["m"])
+            state["brightness"] = summ
+            brightness_percent = state["brightness"] / 255
+            warm_amount = uint8_state["m"]
+            if brightness_percent < 1.0:
+                warm_amount = warm_amount / brightness_percent
+            state["mireds"] = self._temp.to_mireds(warm_amount)
         return state
 
     async def get_raw_state(self):
