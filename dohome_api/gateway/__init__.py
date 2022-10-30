@@ -38,7 +38,7 @@ class DoHomeGateway:
         parts = responses[0].decode("utf-8").split('"')
         return parts[len(parts) - 2]
 
-    async def discover_lights(self, timeout=1.0):
+    async def discover_lights(self, timeout=3.0):
         """Discovers DoHome lights"""
         responses = await self._request(REQUEST_PING, timeout)
         descriptions = []
