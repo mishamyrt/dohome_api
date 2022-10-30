@@ -1,16 +1,9 @@
 """DoHome light controller"""
 
-from json import loads
 from typing import Final
 from logging import getLogger
-from .datagram import open_endpoint
-from .convert import (
-    uint8_to_dohome,
-    dohome_state_to_uint8,
-    apply_brightness,
-    MiredsConverter
-)
-from .commands import (
+from ..datagram import open_endpoint
+from ..commands import (
     CMD_GET_STATE,
     CMD_GET_TIME,
     CMD_SET_POWER,
@@ -18,8 +11,12 @@ from .commands import (
     format_light_request,
     parse_response
 )
-from .constants import (
-    API_PORT,
+from ..constants import API_PORT
+from .brightness import apply_brightness
+from .temperature import TemperatureConverter
+from .uint8 import (
+    dohome_state_to_uint8,
+    uint8_to_dohome
 )
 
 _LOGGER = getLogger(__name__)
@@ -37,7 +34,7 @@ class DoHomeLight():
         # pylint: disable=invalid-name
         self.SID = sid
         self.HOST = host
-        self._temp = MiredsConverter(self.MIREDS_MIN, self.MIREDS_MAX)
+        self._temp = TemperatureConverter(self.MIREDS_MIN, self.MIREDS_MAX)
 
     @property
     def connected(self):

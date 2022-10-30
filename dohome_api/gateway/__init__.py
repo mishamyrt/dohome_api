@@ -1,5 +1,4 @@
 """DoHome Gateway"""
-from socket import getfqdn, gethostname, gethostbyname_ex
 from ..constants import API_PORT
 from ..datagram import open_broadcast
 from ..light import DoHomeLight
@@ -9,7 +8,10 @@ from ..commands import (
     format_request,
     parse_response
 )
-from .util import (apply_mask, parse_pong)
+from .util import (
+    get_discovery_host,
+    parse_pong,
+)
 
 class DoHomeGateway:
     """DoHome gateway controller"""
@@ -18,17 +20,16 @@ class DoHomeGateway:
     _broadcast = None
 
     def __init__(self, host: str = None):
-        self._host = host if host is not None else self._get_discovery_host()
+        self._host = host if host is not None else get_discovery_host()
         self._broadcast = None
 
     async def add_light(self, sid: str) -> DoHomeLight:
+        """Creates new light by sid"""
         host = await self.discover_ip(sid)
-        print(host)
         return DoHomeLight(sid, host)
 
     async def discover_ip(self, sid: str) -> str:
         """Discovers DoHome light IP"""
-        await self._connection()
         responses = await self._request(
             format_request([sid], CMD_GET_IP)
         )
@@ -39,7 +40,6 @@ class DoHomeGateway:
 
     async def discover_lights(self, timeout=1.0):
         """Discovers DoHome lights"""
-        await self._connection()
         responses = await self._request(REQUEST_PING, timeout)
         descriptions = []
         for response in responses:
@@ -49,19 +49,10 @@ class DoHomeGateway:
         return descriptions
 
     async def _request(self, req: str, timeout=0.2) -> list:
+        if self._broadcast is None or self._broadcast.closed:
+            await self._connect()
         self._broadcast.send(req.encode())
         return await self._broadcast.receive(timeout)
 
-    async def _connection(self):
-        if self._broadcast is None or self._broadcast.closed:
-            await self._connect()
-
     async def _connect(self):
         self._broadcast = await open_broadcast((self._host, API_PORT))
-
-    def _get_discovery_host(self) -> str:
-        hosts = gethostbyname_ex(getfqdn(gethostname()))
-        local_ips = hosts[2]
-        if len(local_ips) > 1:
-            return ""
-        return apply_mask(local_ips[0], "255.255.255.0")
