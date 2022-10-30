@@ -21,7 +21,7 @@ clean:
 configure: $(VENV_PATH)
 
 lint:
-	$(VENV) pylint ./src
+	$(VENV) pylint ./dohome_api
 
 dist/: $(VENV_PATH) $(SRC)
 	$(VENV) python3 setup.py sdist bdist_wheel
