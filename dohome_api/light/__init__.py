@@ -91,10 +91,10 @@ class DoHomeLight():
             format_request([self.SID], CMD_GET_TIME)
         )
 
-    async def set_enabled(self, enabled: bool):
+    async def turn_off(self):
         """Turns the device off"""
         return await self._send_request(
-            format_request([self.SID], CMD_SET_POWER, { "op": 1 if enabled else 0 })
+            format_light_request([self.SID])
         )
 
     async def set_white(self, mireds: int, brightness = 255):
