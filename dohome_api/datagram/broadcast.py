@@ -57,7 +57,7 @@ class BroadcastProtocol(DatagramProtocol):
     def datagram_received(self, data: Union[bytes, Text], addr: Address):
         self._broadcast.feed_datagram(data, addr)
 
-async def open_broadcast(addr: Address):
+async def open_broadcast(addr: Address) -> Broadcast:
     """Creates datagram broadcast"""
     loop = get_event_loop()
     broadcast = Broadcast()
