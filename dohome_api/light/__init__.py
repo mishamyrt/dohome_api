@@ -8,39 +8,38 @@ from ..commands import (
     CMD_GET_TIME,
     CMD_SET_POWER,
     format_request,
-    format_light_request,
     parse_response
 )
-from ..constants import API_PORT
+from ..transport import DoHomeApiTransport
 from .brightness import apply_brightness
 from .temperature import TemperatureConverter
+from .request import format_light_request
 from .uint8 import (
-    dohome_state_to_uint8,
     dohome_to_uint8,
-    uint8_to_dohome
+    uint8_to_dohome,
+    dohome_state_to_uint8,
 )
 
 _LOGGER = getLogger(__name__)
 
 class DoHomeLight():
     """DoHome light controller class"""
-    SID: Final = ''
-    HOST = ''
     MIREDS_MIN: Final = 166
     MIREDS_MAX: Final = 400
-    _conn = None
-    _temp = None
 
-    def __init__(self, sid: str, host: str):
-        # pylint: disable=invalid-name
-        self.SID = sid
-        self.HOST = host
+    _temp = None
+    _sids: list[str] = []
+    _transport: DoHomeApiTransport = None
+
+    def __init__(self, sids: list[str], transport: DoHomeApiTransport):
+        self._sids = sids
+        self._transport = transport
         self._temp = TemperatureConverter(self.MIREDS_MIN, self.MIREDS_MAX)
 
     @property
     def connected(self):
         """Indicates whether the socket is connected."""
-        return self._conn is not None and not self._conn.closed
+        return self._transport.connected
 
     async def get_state(self) -> dict:
         """Reads high-level state from the device"""
@@ -82,19 +81,19 @@ class DoHomeLight():
     async def get_raw_state(self):
         """Reads color from the device"""
         return await self._send_request(
-            format_request([self.SID], CMD_GET_STATE)
+            format_request(self._sids, CMD_GET_STATE)
         )
 
     async def get_time(self):
         """Reads time from the device"""
         await self._send_request(
-            format_request([self.SID], CMD_GET_TIME)
+            format_request(self._sids, CMD_GET_TIME)
         )
 
     async def turn_off(self):
         """Turns the device off"""
         return await self._send_request(
-            format_light_request([self.SID])
+            format_light_request(self._sids)
         )
 
     async def set_white(self, mireds: int, brightness = 255):
@@ -103,7 +102,7 @@ class DoHomeLight():
         warm_white = 5000 * white_percent
         return await self._send_request(
             format_light_request(
-                [self.SID],
+                self._sids,
                 w=apply_brightness(5000 - warm_white, brightness),
                 m=apply_brightness(warm_white, brightness)
             )
@@ -114,29 +113,16 @@ class DoHomeLight():
         """Sets RGB color to the device"""
         return await self._send_request(
             format_light_request(
-                [self.SID],
+                self._sids,
                 apply_brightness(uint8_to_dohome(r), brightness),
                 apply_brightness(uint8_to_dohome(g), brightness),
                 apply_brightness(uint8_to_dohome(b), brightness)
             )
         )
 
-    async def _connect(self):
-        """Create socket to light"""
-        if self.connected:
-            self._conn.close()
-        self._conn = await open_endpoint(
-            self.HOST,
-            API_PORT
-        )
-
     async def _send_request(self, request: str):
-        if self._conn is None or self._conn.closed:
-            await self._connect()
-        _LOGGER.debug("Sending request: %s to %s", request, self.HOST)
-        self._conn.send(request.encode())
-        response_data = await self._conn.receive()
-        response = parse_response(response_data.decode("utf-8"))
+        response_data = await self._transport.send_request(request)
+        response = parse_response(response_data[0])
         if response["res"] != 0:
             raise Exception('Command error')
         return response

@@ -1,4 +1,4 @@
-"""Gateway utility functions"""
+"""DoHome transport utility functions"""
 from socket import getfqdn, gethostname, gethostbyname_ex
 
 def apply_mask(local_address: str, mask: str) -> str:
@@ -24,13 +24,3 @@ def get_discovery_host() -> str:
     if len(local_ips) > 1:
         return ""
     return apply_mask(local_ips[0], "255.255.255.0")
-
-def parse_pong(message: str) -> dict:
-    """Parses DoHome pong response"""
-    records = list(map(lambda x: x.split('='), message.split('&')))
-    descr = {
-        record[0]: record[1].strip() for record in records
-    }
-    name = descr["device_name"]
-    descr["sid"] = name[len(name) - 4:]
-    return descr
