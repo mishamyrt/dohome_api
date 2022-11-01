@@ -1,5 +1,6 @@
 """DoHome lights broadcast"""
 
+from typing import List
 from ..transport import DoHomeBroadcastTransport
 from .light import DoHomeLight
 from .light import parse_response
@@ -7,7 +8,7 @@ from .light import parse_response
 class DoHomeLightsBroadcast(DoHomeLight):
     """DoHome broadcast light controller class"""
 
-    def __init__(self, sids: list[str], transport: DoHomeBroadcastTransport):
+    def __init__(self, sids: List[str], transport: DoHomeBroadcastTransport):
         super().__init__(sids, transport)
 
     async def _send_request(self, request: str):

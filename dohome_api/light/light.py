@@ -1,6 +1,6 @@
 """DoHome light controller"""
 
-from typing import Final
+from typing import Final, List
 from logging import getLogger
 from ..commands import (
     CMD_GET_STATE,
@@ -25,10 +25,10 @@ class DoHomeLight():
     MIREDS_MAX: Final = 400
 
     _temp = None
-    _sids: list[str] = []
+    _sids: List[str] = []
     _transport: DoHomeApiTransport = None
 
-    def __init__(self, sids: list[str], transport: DoHomeApiTransport):
+    def __init__(self, sids: List[str], transport: DoHomeApiTransport):
         self._sids = sids
         self._transport = transport
         self._temp = TemperatureConverter(self.MIREDS_MIN, self.MIREDS_MAX)
