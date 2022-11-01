@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="dohome_api",
-    version="0.1.0",
+    version="0.1.1",
     author="Mikhael Khrustik",
     description="Library for controlling smart bulbs that are controlled by the DoIT protocol",
     long_description=long_description,
