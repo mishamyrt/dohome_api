@@ -21,14 +21,14 @@ class DoHomeBroadcastTransport(DoHomeApiTransport):
         return not (self._broadcast is None or self._broadcast.closed)
 
     # pylint: disable-next=arguments-differ
-    async def send_request(self, request: str, timeout=0.2) -> list:
+    async def send_request(self, request: str, timeout=0.2, count=0) -> list:
         """Sends broadcast request to DoHome device"""
         if not self.connected:
             await self._connect()
         self._broadcast.send(
             request.encode()
         )
-        responses = await self._broadcast.receive(timeout)
+        responses = await self._broadcast.receive(timeout, count)
         return list(map(lambda x: x.decode("utf-8"), responses))
 
     async def _connect(self) -> None:

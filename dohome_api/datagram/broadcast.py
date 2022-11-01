@@ -4,18 +4,12 @@ from asyncio import (
     DatagramProtocol,
     DatagramTransport,
     get_event_loop,
-    sleep
+    wait,
+    sleep,
+    FIRST_COMPLETED
 )
-from typing import (
-    Tuple,
-    Union,
-    Text
-)
-from socket import (
-    socket,
-    SOL_SOCKET,
-    SO_BROADCAST
-)
+from typing import Tuple, Union, Text
+from socket import socket, SOL_SOCKET, SO_BROADCAST
 from .client import DatagramClient
 
 Address = Tuple[str, int]
@@ -23,22 +17,35 @@ Address = Tuple[str, int]
 class Broadcast(DatagramClient):
     """High-level UDP broadcaster"""
 
+    def read_queue(self):
+        """Reads response queue"""
+        values = []
+        while not self._queue.empty():
+            (item, _) = self._queue.get_nowait()
+            values.append(item)
+        return values
+
     # pylint: disable-next=arguments-differ
-    async def receive(self, timeout=1.0):
+    async def receive(self, timeout=1.0, count=0):
         """
         Wait for an incoming datagram for time (in seconds) and return it.
         This method is a coroutine.
         """
-        await sleep(timeout)
-        items = []
         if self._queue.empty() and self._closed:
             raise IOError("Enpoint is closed")
-        while not self._closed:
-            if self._queue.empty():
-                return items
-            item = await self._queue.get()
-            items.append(item[0])
-        return items
+        exit_conditions = [sleep(timeout)]
+        if count != 0:
+            exit_conditions.append(self._wait_for_count(count))
+        await wait(exit_conditions, return_when=FIRST_COMPLETED)
+        if self._closed:
+            raise IOError("Enpoint is closed")
+        return self.read_queue()
+
+    async def _wait_for_count(self, count: int) -> None:
+        while True:
+            if self._queue.qsize() == count:
+                return
+            await sleep(0.15)
 
 class BroadcastProtocol(DatagramProtocol):
     """Datagram broadcast protocol"""
