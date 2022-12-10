@@ -40,13 +40,16 @@ class DoHomeGateway:
         parts = responses[0].decode("utf-8").split('"')
         return parts[len(parts) - 2]
 
-    async def discover_devices(self, timeout=3.0) -> List[str]:
+    async def discover_devices(self, sends_count=3) -> List[str]:
         """Searches for DoHome devices on the network. Returns a list of sIDs"""
-        responses = await self._broadcast.send_request(REQUEST_PING, timeout)
-        descriptions = []
+        sids = []
+        while sends_count > 0:
+            await self._broadcast.send_request(REQUEST_PING, receive=False)
+            sends_count -= 1
+        responses = await self._broadcast.receive()
         for response in responses:
             if response.startswith('cmd=pong'):
                 sid = parse_pong_sid(response)
-                if sid is not None:
-                    descriptions.append(sid)
-        return descriptions
+                if sid is not None and sid not in sids:
+                    sids.append(sid)
+        return sids
