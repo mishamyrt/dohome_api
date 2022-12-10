@@ -1,19 +1,22 @@
+"""DoHome API setup script"""
 import setuptools
 
+with open(".version", "r", encoding="utf-8") as fh:
+    VERSION = ''.join(fh.read().split())
+
 with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+    README = fh.read()
 
 setuptools.setup(
     name="dohome_api",
-    version="0.1.1",
+    version=VERSION,
     author="Mikhael Khrustik",
     description="Library for controlling smart bulbs that are controlled by the DoIT protocol",
-    long_description=long_description,
+    long_description=README,
     long_description_content_type="text/markdown",
     packages=[
         'dohome_api',
         'dohome_api.light',
-        'dohome_api.datagram',
         'dohome_api.transport',
     ],
     classifiers=[
