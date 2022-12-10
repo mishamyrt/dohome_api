@@ -1,7 +1,7 @@
 """DoHome broadcast transport"""
 
 from typing import Union
-from ..datagram import open_broadcast, Broadcast
+from aiodatagram import open_broadcast, Broadcast
 from .interface import DoHomeApiTransport
 from .util import get_discovery_host
 from .constants import API_PORT
@@ -29,7 +29,11 @@ class DoHomeBroadcastTransport(DoHomeApiTransport):
             request.encode()
         )
         responses = await self._broadcast.receive(timeout, count)
-        return list(map(lambda x: x.decode("utf-8"), responses))
+        bodies = []
+        for response in responses:
+            (body, _) = response
+            bodies.append(body.decode("utf-8"))
+        return bodies
 
     async def _connect(self) -> None:
         self._broadcast = await open_broadcast((self._host, API_PORT))

@@ -1,7 +1,7 @@
 """DoHome direct transport"""
 
 from typing import Union
-from ..datagram import open_endpoint, Endpoint
+from aiodatagram import open_endpoint, Endpoint
 from .interface import DoHomeApiTransport
 from .constants import API_PORT, API_ENCODING
 
