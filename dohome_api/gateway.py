@@ -1,36 +1,34 @@
 """DoHome Gateway"""
-from typing import Final, Tuple
+from typing import Final, List, Union
 from .commands import (
     CMD_GET_IP,
     format_request,
 )
 from .transport import DoHomeBroadcastTransport
-from .light import DoHomeLight
+from .light import DoHomeLightsBroadcast
 
 REQUEST_PING: Final[str] = 'cmd=ping\r\n'
 
-def parse_pong(message: str) -> dict:
-    """Parses DoHome pong response"""
+def parse_pong_sid(message: str) -> Union[str, None]:
+    """Parses device sID from pong response"""
     records = list(map(lambda x: x.split('='), message.split('&')))
-    descr = {
-        record[0]: record[1].strip() for record in records
-    }
-    name = descr["device_name"]
-    descr["sid"] = name[len(name) - 4:]
-    return descr
+    for record in records:
+        if record[0] == "device_name":
+            name = record[1].strip()
+            return name[len(name) - 4:]
+    return None
 
 class DoHomeGateway:
     """DoHome gateway controller"""
 
     _broadcast: DoHomeBroadcastTransport = None
 
-    def __init__(self, broadcast: DoHomeBroadcastTransport):
-        self._broadcast = broadcast
+    def __init__(self):
+        self._broadcast = DoHomeBroadcastTransport('255.255.255.255')
 
-    async def add_light(self, sid: str) -> DoHomeLight:
+    def add_lights(self, sids: List[str]) -> DoHomeLightsBroadcast:
         """Creates new light by sid"""
-        host = await self.discover_ip(sid)
-        return DoHomeLight(sid, host)
+        return DoHomeLightsBroadcast(sids, self._broadcast)
 
     async def discover_ip(self, sid: str) -> str:
         """Discovers DoHome light IP"""
@@ -42,17 +40,13 @@ class DoHomeGateway:
         parts = responses[0].decode("utf-8").split('"')
         return parts[len(parts) - 2]
 
-    async def discover_devices(self, timeout=3.0):
-        """Discovers DoHome devices"""
+    async def discover_devices(self, timeout=3.0) -> List[str]:
+        """Searches for DoHome devices on the network. Returns a list of sIDs"""
         responses = await self._broadcast.send_request(REQUEST_PING, timeout)
         descriptions = []
         for response in responses:
             if response.startswith('cmd=pong'):
-                descriptions.append(parse_pong(response))
+                sid = parse_pong_sid(response)
+                if sid is not None:
+                    descriptions.append(sid)
         return descriptions
-
-def create_gateway(host: str=None) -> Tuple[DoHomeGateway, DoHomeBroadcastTransport]:
-    """Creates DoHome gateway"""
-    broadcast = DoHomeBroadcastTransport(host)
-    gateway = DoHomeGateway(broadcast)
-    return (gateway, broadcast)
