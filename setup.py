@@ -20,7 +20,10 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License"
     ],
+    install_requires=[
+        'aiodatagram==0.0.1',
+        'arrrgs==0.0.2'
+    ],
     python_requires='>=3.7',
     package_dir={'':'.'},
-    install_requires=[]
 )
