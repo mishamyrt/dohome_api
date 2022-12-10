@@ -28,8 +28,8 @@ class DoHomeLight():
     _sids: List[str] = []
     _transport: DoHomeApiTransport = None
 
-    def __init__(self, sids: List[str], transport: DoHomeApiTransport):
-        self._sids = sids
+    def __init__(self, sid: str, transport: DoHomeApiTransport):
+        self._sids = [sid]
         self._transport = transport
         self._temp = TemperatureConverter(self.MIREDS_MIN, self.MIREDS_MAX)
 
