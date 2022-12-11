@@ -25,7 +25,10 @@ setuptools.setup(
     ],
     install_requires=[
         'aiodatagram==0.0.1',
-        'arrrgs==0.0.2'
+        'arrrgs==0.0.4'
+    ],
+    scripts=[
+        'scripts/dohome_rgb'
     ],
     python_requires='>=3.7',
     package_dir={'':'.'},
