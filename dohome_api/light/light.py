@@ -1,6 +1,6 @@
 """DoHome light controller"""
 
-from typing import Final, List
+from typing import Final, List, Tuple
 from logging import getLogger
 from ..commands import (
     CMD_GET_STATE,
@@ -105,9 +105,10 @@ class DoHomeLight():
             )
         )
 
-    # pylint: disable-next=invalid-name
-    async def set_rgb(self, r: int, g: int, b: int, brightness = 255):
+    async def set_rgb(self, color: Tuple[int, int, int], brightness = 255):
         """Sets RGB color to the device"""
+        # pylint: disable-next=invalid-name
+        (r, g, b) = color
         return await self._send_request(
             format_light_request(
                 self._sids,
