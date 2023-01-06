@@ -23,8 +23,8 @@ class DoHomeGateway:
 
     _broadcast: DoHomeBroadcastTransport = None
 
-    def __init__(self):
-        self._broadcast = DoHomeBroadcastTransport('255.255.255.255')
+    def __init__(self, gateway_ip = '255.255.255.255'):
+        self._broadcast = DoHomeBroadcastTransport(gateway_ip)
 
     def add_lights(self, sids: List[str]) -> DoHomeLightsBroadcast:
         """Creates new light by sid"""
