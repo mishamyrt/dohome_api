@@ -22,13 +22,15 @@ class DoHomeGateway:
     """DoHome gateway controller"""
 
     _broadcast: DoHomeBroadcastTransport = None
+    _timeout: float
 
-    def __init__(self, gateway_ip = '255.255.255.255'):
+    def __init__(self, gateway_ip = '255.255.255.255', timeout = 1.0):
+        self._timeout = timeout
         self._broadcast = DoHomeBroadcastTransport(gateway_ip)
 
     def add_lights(self, sids: List[str]) -> DoHomeLightsBroadcast:
         """Creates new light by sid"""
-        return DoHomeLightsBroadcast(sids, self._broadcast)
+        return DoHomeLightsBroadcast(sids, self._broadcast, self._timeout)
 
     async def discover_ip(self, sid: str) -> str:
         """Discovers DoHome light IP"""
