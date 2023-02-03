@@ -56,7 +56,7 @@ async def white(args, lights: DoHomeLightsBroadcast):
 
 async def prepare(args):
     """Prepare DoHome API"""
-    gateway = DoHomeGateway()
+    gateway = DoHomeGateway('192.168.1.255')
     if args.sids is None:
         sids = await gateway.discover_devices()
     else:
