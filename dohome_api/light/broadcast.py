@@ -2,8 +2,8 @@
 
 from typing import List
 from ..transport import DoHomeBroadcastTransport
-from .light import DoHomeLight
-from .light import parse_response
+from .light import DoHomeLight, parse_response
+from .exceptions import BadCommandException, NotEnoughException
 
 class DoHomeLightsBroadcast(DoHomeLight):
     """DoHome broadcast light controller class"""
@@ -21,8 +21,8 @@ class DoHomeLightsBroadcast(DoHomeLight):
         )
         responses = list(map(parse_response, response_data))
         if len(responses) < len(self._sids):
-            raise Exception(f"Not all lights responds: {len(responses)} from {len(self._sids)}")
+            raise NotEnoughException
         for response in responses:
             if response["res"] != 0:
-                raise Exception('Command error')
+                raise BadCommandException
         return responses[0]

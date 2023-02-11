@@ -6,12 +6,13 @@ from ..commands import (
     CMD_GET_STATE,
     CMD_GET_TIME,
     format_request,
-    parse_response
+    parse_response,
 )
 from ..transport import DoHomeApiTransport
 from .brightness import apply_brightness
 from .temperature import TemperatureConverter
 from .request import format_light_request
+from .exceptions import BadCommandException
 from .uint8 import (
     uint8_to_dohome,
     dohome_state_to_uint8,
@@ -122,6 +123,6 @@ class DoHomeLight():
         response_data = await self._transport.send_request(request)
         response = parse_response(response_data[0])
         if response["res"] != 0:
-            raise Exception('Command error')
+            raise BadCommandException()
         return response
     
