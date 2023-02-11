@@ -18,6 +18,7 @@ setuptools.setup(
         'dohome_api',
         'dohome_api.light',
         'dohome_api.transport',
+        'dohome_api.gateway',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
