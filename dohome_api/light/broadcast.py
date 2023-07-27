@@ -15,12 +15,14 @@ class DoHomeLightsBroadcast(DoHomeLight):
         self._sids = sids
         self._timeout = timeout
 
-    async def _send_request(self, request: str):
+    async def _send_request(self, request: str, attempts=5):
         response_data = await self._transport.send_request(
             request, self._timeout, len(self._sids)
         )
         responses = list(map(parse_response, response_data))
         if len(responses) < len(self._sids):
+            if attempts > 0:
+                return await self._send_request(request, attempts - 1)
             raise NotEnoughException
         for response in responses:
             if response["res"] != 0:
