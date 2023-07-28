@@ -1,5 +1,6 @@
 """DoHome broadcast transport"""
 
+import asyncio
 from typing import Union, List
 from aiodatagram import open_broadcast, Broadcast
 from .interface import DoHomeApiTransport
@@ -22,7 +23,7 @@ class DoHomeBroadcastTransport(DoHomeApiTransport):
 
     async def receive(self, timeout = 1.0, count = 0) -> List[str]:
         """Receives messages from broadcast"""
-        responses = await self._broadcast.receive(timeout, count)
+        responses = await asyncio.create_task(self._broadcast.receive(timeout, count))
         bodies = []
         for response in responses:
             (body, _) = response
