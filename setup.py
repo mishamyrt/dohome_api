@@ -25,7 +25,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License"
     ],
     install_requires=[
-        'aiodatagram==0.0.1',
+        'aiodatagram==0.0.2',
         'arrrgs==0.0.4'
     ],
     scripts=[

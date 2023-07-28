@@ -1,6 +1,6 @@
 .PHONY: clean
 
-VERSION = 0.2.11
+VERSION = 0.2.12
 DIST_PATH = ./dist
 VENV_PATH = ./venv
 VENV = . $(VENV_PATH)/bin/activate;
