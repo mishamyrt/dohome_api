@@ -1,11 +1,7 @@
 """DoHome Lights controlling module"""
-from .light import (
-    DoHomeLight,
-    DoHomeLightsBroadcast,
-    BadCommandException,
-    NotEnoughException,
-)
-from .gateway import (
-    DoHomeGateway,
-    NotFoundException
-)
+from .device import *
+from .doit import *
+from .exc import *
+from .stream import *
+from .discovery import *
+from .int import *

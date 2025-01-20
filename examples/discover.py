@@ -1,16 +1,17 @@
-"""DoHome broadcast controll example"""
+"""DoHome device discovery example"""
 
 from asyncio import run
-from json import dumps
-from dohome_api import create_gateway
+from dohome_api import discover_devices
 
 async def main():
     """Example entrypoint"""
-    (gateway, _) = create_gateway("192.168.31.255")
-    descriptions = await gateway.discover_devices()
-    print(f"Discovered {len(descriptions)} devices")
-    sids = list(map(lambda x: x["sid"], descriptions))
-    print(f"SID: {dumps(sids)}")
+    devices = await discover_devices()
+    if not devices:
+        print("No devices found")
+        return
+    print(f"Found {len(devices)} devices")
+    for device in devices:
+        print(f"{device['ip']} {device['type'].name} {device['sid']}")
 
 if __name__ == '__main__':
     run(main())

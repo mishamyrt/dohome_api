@@ -1,7 +1,8 @@
 .PHONY: clean
 
-VERSION = 0.2.12
+VERSION = 1.0.0
 DIST_PATH = ./dist
+PYTHON_BIN = python3.13
 VENV_PATH = ./venv
 VENV = . $(VENV_PATH)/bin/activate;
 
@@ -13,7 +14,7 @@ SRC := \
 publish: clean $(DIST_PATH)
 	git tag "v$(VERSION)"
 	git push --tags
-	$(VENV) python3.11 -m twine upload --repository pypi dist/* -umishamyrt
+	$(VENV) python -m twine upload --repository pypi dist/* -umishamyrt
 
 .PHONY: clean
 clean:
@@ -22,28 +23,26 @@ clean:
 	rm -rf dist
 
 .PHONY: build
-build: $(DIST_PATH)
+build:
+	echo "$(VERSION)" > .version
+	$(VENV) python -m build
 
 .PHONY: install
-install: $(DIST_PATH)
-	pip3 install .
-
-.PHONY: install-venv
-install-venv: $(DIST_PATH)
+install:
 	$(VENV) pip install .
+	$(VENV) pipx install .
 
 .PHONY: lint
 lint:
-	$(VENV) pylint $(SRC)
+	$(VENV) ruff check dohome_api
+	$(VENV) pylint dohome_api
 
-configure: requirements.txt
+.PHONY: test
+test:
+	$(VENV) pytest -o log_cli=true -vv tests/*.py
+
+.PHONY: configure
+configure:
 	rm -rf $(VENV_PATH)
-	make $(VENV_PATH)
-
-$(DIST_PATH): $(VENV_PATH) $(SRC)
-	echo $(VERSION) > .version
-	$(VENV) python3.11 setup.py sdist bdist_wheel
-
-$(VENV_PATH):
-	python3.11 -m venv $(VENV_PATH)
+	$(PYTHON_BIN) -m venv $(VENV_PATH)
 	$(VENV) pip install -r requirements.txt
