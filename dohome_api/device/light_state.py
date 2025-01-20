@@ -43,7 +43,7 @@ def parse_state(res: dict) -> LightState:
         mode = LightMode.WHITE
         is_on = True
         brightness = doit_int_to_uint8(white_total)
-        temperature = to_kelvin(res["m"])
+        temperature = to_kelvin(res["w"])
 
     return {
         "is_on": is_on,
