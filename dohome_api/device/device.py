@@ -14,6 +14,13 @@ class DoHomeDevice:
     def __init__(self, client: StreamClient):
         self._client = client
 
+    @property
+    def connected(self):
+        """
+        Indicates whether the client is connected.
+        To connect, just send any command"""
+        return self._client.connected
+
     async def get_info(self) -> DeviceInfo:
         """Returns device info"""
         resp = await self._client.send(Command.GET_DEV_INFO)
