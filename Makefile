@@ -1,6 +1,6 @@
 .PHONY: clean
 
-VERSION = 1.0.0
+VERSION = 1.0.1
 DIST_PATH = ./dist
 PYTHON_BIN = python3.13
 VENV_PATH = ./venv
