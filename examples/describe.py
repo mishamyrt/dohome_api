@@ -8,15 +8,15 @@ DISCOVERY_HOST = "192.168.31.255"
 async def main():
     """Example entrypoint"""
     print("Searching DoHome lights")
-    ips = await discover_devices()
-    if not ips:
+    devices = await discover_devices()
+    if not devices:
         print("No devices found")
         return
-    for ip in ips:
-        device = open_device(ip)
+    for dev in devices:
+        device = open_device(dev['ip'])
         info = await device.get_info()
         state = await device.get_state()
-        print(f"Device: {ip}")
+        print(f"Device: {dev['ip']}")
         print(f"SID: {info['sid']}")
         print(f"MAC: {info['mac']}")
         print(f"Type: {info['type'].name}")

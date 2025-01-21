@@ -1,7 +1,6 @@
 """DoIT client"""
 import asyncio
-
-from dohome_api.exc import ConnectionTimeoutException
+from dohome_api.exc import PayloadTooLong, ClientIsNotResponding
 from dohome_api.doit import (
     PORT_TCP,
     MESSAGE_MAX_SIZE,
@@ -11,47 +10,50 @@ from dohome_api.doit import (
     parse_message
 )
 
-from .persistent import PersistentTCPStream
-
-class DoITError(Exception):
-    """DoIT client error"""
-
 class StreamClient:
     """TCP DoIT client"""
-    _stream: PersistentTCPStream
+    _host: str
+    _connect_timeout: float
+    _request_timeout: float
 
     def __init__(
             self,
             host: str,
-            disconnect_timeout: float = 10.0,
-            request_timeout: float = 2.0):
-        self._stream = PersistentTCPStream(
-            host, PORT_TCP, disconnect_timeout, request_timeout)
+            connect_timeout: float = 1.0,
+            request_timeout: float = 3.5):
+        self._connect_timeout = connect_timeout
+        self._request_timeout = request_timeout
+        self._host = host
 
-    @property
-    def connected(self):
-        """Indicates whether the client is connected"""
-        return self._stream.connected
-
-    async def disconnect(self):
-        """Disconnects from the DoIT device"""
-        await self._stream.disconnect()
-
-    async def connect(self):
-        """Connects to the DoIT server"""
-        await self._stream.connect()
-
-    async def send(self, cmd: Command, **kwargs) -> dict:
-        """Sends request to DoIT device"""
-        req_data = format_command(cmd, **kwargs) + "\n"
+    async def _try_send(self, cmd: Command, **kwargs) -> dict:
+        req_data = format_command(cmd, **kwargs) + "\r\n"
 
         if len(req_data) > MESSAGE_MAX_SIZE:
-            raise DoITError("Message too long")
+            raise PayloadTooLong(len(req_data))
 
+        async with asyncio.timeout(self._connect_timeout):
+            reader, writer = await asyncio.open_connection(
+                self._host, PORT_TCP)
+
+        writer.write(req_data.encode())
         try:
-            res_data = await self._stream.send(req_data.encode())
-            res = parse_message(res_data)
-            assert_response(res, cmd)
-            return res
-        except asyncio.TimeoutError as exc:
-            raise ConnectionTimeoutException from exc
+            async with asyncio.timeout(self._request_timeout):
+                await writer.drain()
+                data = await reader.readline()
+        finally:
+            writer.close()
+            await writer.wait_closed()
+
+        res = parse_message(data)
+        assert_response(res, cmd)
+        return res
+
+    async def send(self, cmd: Command, attempts: int = 3, **kwargs) -> dict:
+        """Sends request to DoIT device"""
+        while attempts > 0:
+            try:
+                result = await self._try_send(cmd, **kwargs)
+                return result
+            except asyncio.TimeoutError:
+                attempts -= 1
+        raise ClientIsNotResponding(self._host)

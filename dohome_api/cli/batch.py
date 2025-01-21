@@ -15,7 +15,7 @@ async def _discover_ips(timeout: float):
     devices = await discover_devices(timeout=timeout)
     return map(lambda x: x["ip"], devices)
 
-async def _parse_hosts(hosts: str) -> list[str]:
+def _parse_hosts(hosts: str) -> list[str]:
     hosts = map(lambda x: x.strip(), hosts.split(","))
     hosts = filter(lambda x: x != "", hosts)
     return hosts

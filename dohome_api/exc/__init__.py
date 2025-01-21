@@ -2,4 +2,4 @@
 
 from .base import DoHomeException
 from .response import *
-from .connection import *
+from .request import *
