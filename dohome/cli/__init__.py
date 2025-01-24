@@ -2,10 +2,9 @@
 import logging
 from arrrgs import arg, command, global_args, run
 
-from dohome_api.discovery import discover_devices
-
-from .light import turn_on, turn_off, color, white
+from .light import turn_on, turn_off, set_color, set_white
 from .describe import describe
+from .discover import discover
 
 global_args(
     arg('--hosts', '-d',
@@ -15,17 +14,6 @@ global_args(
     arg("--debug", "-D",
         action="store_true", help="Enable debug logging")
 )
-
-@command()
-async def discover():
-    """Manifest creation"""
-    devices = await discover_devices()
-    if not devices:
-        print("No devices found")
-        return
-    print(f"Found {len(devices)} devices")
-    for device in devices:
-        print(f"{device['ip']} {device['type'].name} {device['sid']}")
 
 def _prepare(args):
     if args.debug:

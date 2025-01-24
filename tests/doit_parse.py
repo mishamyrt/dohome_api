@@ -1,5 +1,5 @@
 """DoIT protocol parser tests"""
-from dohome_api.doit import (
+from dohome.doit import (
     DeviceType,
     parse_message,
     parse_datagram,

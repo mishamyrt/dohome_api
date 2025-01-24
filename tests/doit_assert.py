@@ -1,11 +1,11 @@
 """DoIT protocol response assertion tests"""
 import pytest
-from dohome_api.doit import (
+from dohome.doit import (
     Command,
     ResponseCode,
     assert_response,
 )
-from dohome_api.exc import (
+from dohome.exc import (
     ResponseCodeNotFound,
     ResponseCodeInvalid,
     CommandCodeInvalid,

@@ -34,8 +34,8 @@ install:
 
 .PHONY: lint
 lint:
-	$(VENV) ruff check dohome_api
-	$(VENV) pylint dohome_api
+	$(VENV) ruff check dohome
+	$(VENV) pylint dohome
 
 .PHONY: test
 test:

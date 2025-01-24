@@ -2,30 +2,26 @@
 from typing import TypedDict
 from enum import Enum
 
-from dohome_api.int import UInt8, doit_int_to_uint8
+from dohome.api import LightState
 
-from .temperature import to_kelvin
-
-RGBColor = tuple[UInt8, UInt8, UInt8]
+from .rgb import RGBColor, from_dorgb
+from .int import UInt8, doint_to_uint8
+from .temperature import from_dowhite
 
 class LightMode(Enum):
     """Light mode"""
     RGB = "rgb"
     WHITE = "white"
 
-class LightState(TypedDict):
-    """Light state"""
-    is_on: bool
-    brightness: UInt8
-    mode: LightMode
-    color: RGBColor
-    temperature: int
+ParsedState = TypedDict("ParsedState", {
+    "is_on": bool,
+    "brightness": UInt8,
+    "mode": LightMode,
+    "color": RGBColor,
+    "temperature": int
+})
 
-def _parse_color(res: dict) -> RGBColor:
-    rgb_color = map(doit_int_to_uint8, [res["r"], res["g"], res["b"]])
-    return tuple(rgb_color)
-
-def parse_state(res: dict) -> LightState:
+def parse_state(res: LightState) -> ParsedState:
     """Reads high-level state from the device"""
 
     is_on = False
@@ -33,7 +29,7 @@ def parse_state(res: dict) -> LightState:
     brightness = 255
     temperature = 0
 
-    rgb_color = _parse_color(res)
+    rgb_color = from_dorgb((res["r"], res["g"], res["b"]))
     white_total = sum([res["w"], res["m"]])
 
     if sum(rgb_color) > 0:
@@ -42,8 +38,8 @@ def parse_state(res: dict) -> LightState:
     elif white_total > 0:
         mode = LightMode.WHITE
         is_on = True
-        brightness = doit_int_to_uint8(white_total)
-        temperature = to_kelvin(res["w"])
+        brightness = doint_to_uint8(white_total)
+        temperature = from_dowhite((res["w"], res["m"]), brightness)
 
     return {
         "is_on": is_on,

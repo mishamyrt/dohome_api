@@ -2,36 +2,68 @@
 
 from enum import IntEnum, StrEnum
 
+# DoIT int value range
+DO_INT_MAX = 5000
+
 MESSAGE_MAX_SIZE = 256
 
-PORT_UDP = 6091
 PORT_TCP = 5555
-
-class DeviceType(StrEnum):
-    """DoHome device types"""
-    RGBW_BULB = "DT-WYRGB"
-    WHITE_BULB = "DT-WY"
-    LED_STRIP = "STRIPE"
+PORT_UDP = 6091
 
 class Command(IntEnum):
     """DoIT protocol command codes"""
-    SCAN_WIFI = 1
-    MODIFY_SSID = 2 # {"cmd":2,"ssid":"abc","pass":"88888888"}
     REBOOT = 3
-    GET_DEV_INFO = 4
-    SWITCH_OPERATE = 5
-    SET_STATE = 6 # {"cmd":6,"r":0,"g":1,"b":2,"w":3,"m":4,"on":1,"temp":1}
-    SET_PRESET_MODE = 7 # {"cmd":7,"index":0,"freq":22}
-    SET_CUSTOM_MODE = 8 # {"cmd":8,"colors":[{"r":1,"g":2,"b":3,"w":4},..],"mode":1,"freq":22}  # noqa: E501
-    GET_TIME = 9
-    ROUTER_CONFIG = 16 # ret {"cmd":16,"ssid":"test_ssid","pass":"12345567""..}
+    GET_DEVICE_INFO = 4
+    SET_STATE = 6
     GET_STATE = 25
+    SET_EFFECT = 7
+    SCAN_WIFI = 1
+    SET_WIFI_CREDENTIALS = 2
+    GET_WIFI_CREDENTIALS = 16
+    GET_TIME = 9
+    SET_TIME = 10
 
 class DatagramCommand(StrEnum):
     """DoIT protocol command codes"""
     PING = "ping"
     PONG = "pong"
-    DOIT_COMMAND = "ctrl"
+    CTRL = "ctrl"
+
+class DeviceType(StrEnum):
+    """DoIT device types"""
+    RGBW_BULB = "DT-WYRGB"
+    WHITE_BULB = "DT-WY"
+    LED_STRIP = "STRIPE"
+
+class Effect(IntEnum):
+    """DoIT light effect codes"""
+    SEVEN_GRADIENT = 1
+    RED_GRADIENT = 2
+    GREEN_GRADIENT = 3
+    BLUE_GRADIENT = 4
+    YELLOW_GRADIENT = 5
+    CYAN_GRADIENT = 6
+    PURPLE_GRADIENT = 7
+    WHITE_GRADIENT = 8
+    RED_STROBE = 9
+    GREEN_STROBE = 10
+    BLUE_STROBE = 11
+    YELLOW_STROBE = 12
+    RG_GRADIENT = 13
+    RB_GRADIENT = 14
+    GB_GRADIENT = 15
+    RG_JUMP = 16
+    RB_JUMP = 17
+    GB_JUMP = 18
+    RG_STROBE = 19
+    RB_STROBE = 20
+    GB_STROBE = 21
+    SEVEN_JUMP = 22
+    SEVEN_STROBE = 23
+    WHITE_STROBE = 24
+    RGB_GRADIENT = 25
+    RGB_JUMP = 26
+    RGB_STROBE = 27
 
 class ResponseCode(IntEnum):
     """DoIT protocol response codes"""

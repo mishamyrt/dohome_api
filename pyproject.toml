@@ -23,7 +23,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.scripts]
-dohome = "dohome_api.cli:start"
+dohome = "dohome.cli:start"
 
 [tool.setuptools.dynamic]
 version = {file = [".version"]}

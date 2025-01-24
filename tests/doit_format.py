@@ -1,5 +1,5 @@
 """DoIT protocol formatter tests"""
-from dohome_api.doit import (
+from dohome.doit import (
     Command,
     DatagramCommand,
 
