@@ -1,6 +1,6 @@
 .PHONY: clean
 
-VERSION = 1.0.3
+VERSION = 1.1.0
 DIST_PATH = ./dist
 PYTHON_BIN = python3.13
 VENV_PATH = ./venv
@@ -11,10 +11,13 @@ SRC := \
 	$(wildcard dohome_api/*.py)
 
 .PHONY: publish
-publish: clean $(DIST_PATH)
+publish: clean build
+	$(VENV) python3 -m twine upload --repository pypi dist/*
+	git add Makefile
+	git commit -m "chore: release v$(VERSION)"
 	git tag "v$(VERSION)"
+	git push
 	git push --tags
-	$(VENV) python -m twine upload --repository pypi dist/* -umishamyrt
 
 .PHONY: clean
 clean:
