@@ -49,3 +49,5 @@ configure:
 	rm -rf $(VENV_PATH)
 	$(PYTHON_BIN) -m venv $(VENV_PATH)
 	$(VENV) pip install -r requirements.txt
+	make build
+	make install
