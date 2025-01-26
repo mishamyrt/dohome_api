@@ -22,8 +22,6 @@ def from_dowhite(value: DoWhite, brightness: int) -> int:
     assert_doint(blue)
     assert_doint(yellow + blue)
 
-    print(yellow, blue)
-
     yellow = (yellow / brightness) * 255
     percent = yellow / DO_INT_MAX
     return math.ceil(percent * _KELVIN_DELTA) + KELVIN_MIN
@@ -36,5 +34,4 @@ def to_dowhite(kelvin: int) -> DoWhite:
     yellow = int(percent * DO_INT_MAX)
     blue = DO_INT_MAX - yellow
 
-    print(yellow, blue)
     return (yellow, blue)

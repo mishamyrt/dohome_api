@@ -6,7 +6,7 @@ from dohome.api import LightState
 
 from .rgb import RGBColor, from_dorgb
 from .int import UInt8, doint_to_uint8
-from .temperature import from_dowhite
+from .white import from_dowhite
 
 class LightMode(Enum):
     """Light mode"""

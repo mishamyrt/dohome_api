@@ -72,7 +72,14 @@ class APIClient:
         """Reads WiFi credentials from the device"""
         return await self._send_command(Command.GET_WIFI_CREDENTIALS)
 
-    async def _set_color_state(self, r=0, g=0, b=0, m=0, w=0, on=None) -> None:
+    async def _set_color_state( # pylint: disable=too-many-positional-arguments
+            self,
+            r=0,
+            g=0,
+            b=0,
+            m=0,
+            w=0,
+            on=None) -> None:
         kwargs: SetLightStateParams = {
             "r": r,
             "g": g,

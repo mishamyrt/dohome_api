@@ -1,4 +1,5 @@
 """DoHome int helpers"""
+from __future__ import annotations
 import math
 from dohome.api import DoInt, DO_INT_MAX
 
@@ -18,11 +19,6 @@ def assert_doint(value: int):
         raise ValueError(f"Invalid DoIT int value: {value}")
     if value < 0 or value > DO_INT_MAX:
         raise ValueError(f"Invalid DoIT int value. Out of range: {value}")
-
-def scale_by_uint8(value: int, scale: UInt8) -> UInt8:
-    """Scales value by uint8 value"""
-    assert_uint8(scale)
-    return int(value * (scale / 255))
 
 def doint_to_uint8(value: DoInt):
     """Converts DoIT int value to uint8"""

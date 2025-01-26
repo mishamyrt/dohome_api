@@ -1,5 +1,5 @@
 """DoIT protocol formatter tests"""
-from dohome.doit import (
+from dohome.api import (
     Command,
     DatagramCommand,
 
@@ -11,7 +11,7 @@ from dohome.doit import (
 
 def test_format_command():
     """Test format_command function"""
-    assert format_command(Command.GET_DEV_INFO) == '{"cmd":4}'
+    assert format_command(Command.GET_DEVICE_INFO) == '{"cmd":4}'
     assert format_command(
         Command.SET_STATE, r=1, g=2, b=3, m=4, w=5) == '{"cmd":6,"r":1,"g":2,"b":3,"m":4,"w":5}' # noqa: E501
 
@@ -25,7 +25,7 @@ def test_format_datagram_command():
     """Test format_datagram_command function"""
     assert format_datagram_command(DatagramCommand.PING) == 'cmd=ping'
     assert format_datagram_command(
-        DatagramCommand.DOIT_COMMAND, op={
+        DatagramCommand.CTRL, op={
             "cmd": Command.SET_STATE,
             "r": 1,
             "g": 2,

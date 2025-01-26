@@ -37,12 +37,12 @@ install:
 
 .PHONY: lint
 lint:
-	$(VENV) ruff check dohome
-	$(VENV) pylint dohome
+	$(VENV) ruff check dohome tests
+	$(VENV) pylint dohome tests
 
 .PHONY: test
 test:
-	$(VENV) pytest -o log_cli=true -vv tests/*.py
+	$(VENV) pytest -o log_cli=true -vv tests/**/*.py
 
 .PHONY: configure
 configure:
