@@ -1,4 +1,5 @@
 """DoIT API broadcast client"""
+
 from logging import getLogger
 from .transport import BroadcastAPITransport
 from .client import APIClient
@@ -16,14 +17,14 @@ from .types import (
 
 _LOGGER = getLogger(__name__)
 
+
 async def discover(transport: BroadcastAPITransport) -> list[PingResponse]:
     """Discovers DoIT API devices on the network"""
-    req = format_datagram({
-            "cmd": DatagramCommand.PING
-        }) + "\n"
+    req = format_datagram({"cmd": DatagramCommand.PING}) + "\n"
     res = await transport.send(req.encode())
     dgrams = map(decode_datagram, res)
     return list(dgrams)
+
 
 class DatagramClient(APIClient):
     """DoIT API broadcast client"""
@@ -48,16 +49,22 @@ class DatagramClient(APIClient):
         return datagram
 
     async def _send_command(self, cmd: Command, **kwargs) -> list[BaseResponse]:
-        req = format_datagram({
-            "cmd": DatagramCommand.CTRL,
-            "devices": self._sids,
-            "op": format_command(cmd, **kwargs)
-        }) + "\r\n"
+        req = (
+            format_datagram(
+                {
+                    "cmd": DatagramCommand.CTRL,
+                    "devices": self._sids,
+                    "op": format_command(cmd, **kwargs),
+                }
+            )
+            + "\r\n"
+        )
         res = await self._transport.send(req.encode())
         if len(res) != len(self._sids):
             _LOGGER.warning(
                 "Not all responses received: expected %d, got %d",
                 len(self._sids),
-                len(res))
+                len(res),
+            )
         res = map(lambda x: self._decode_response(x, cmd), res)
         return list(res)

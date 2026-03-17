@@ -1,4 +1,5 @@
 """DoIT protocol response assertion tests"""
+
 import pytest
 from dohome.api import (
     Command,
@@ -9,7 +10,7 @@ from dohome.exc import (
     ResponseCodeNotFound,
     ResponseCodeInvalid,
     CommandCodeInvalid,
-    CommandCodeNotFound
+    CommandCodeNotFound,
 )
 
 
@@ -25,4 +26,5 @@ def test_assert_response():
         assert_response({"cmd": Command.GET_TIME.value, "res": 1}, Command.GET_TIME)
 
     assert_response(
-        {"cmd": Command.GET_TIME.value, "res": ResponseCode.OK.value}, Command.GET_TIME)
+        {"cmd": Command.GET_TIME.value, "res": ResponseCode.OK.value}, Command.GET_TIME
+    )

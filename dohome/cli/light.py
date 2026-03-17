@@ -9,6 +9,7 @@ from dohome.color import (
 )
 from .batch import get_devices, parallel_run
 
+
 def _hex_to_rgb(hex_color) -> RGBColor:
     """Converts hex color to RGB tuple"""
     hex_color = hex_color.lstrip("#")
@@ -16,11 +17,8 @@ def _hex_to_rgb(hex_color) -> RGBColor:
         raise ValueError("Invalid hex color")
 
     r, g, b = hex_color[:2], hex_color[2:4], hex_color[4:]
-    return (
-        int(r, 16),
-        int(g, 16),
-        int(b, 16)
-    )
+    return (int(r, 16), int(g, 16), int(b, 16))
+
 
 @command(name="off")
 async def turn_off(args):
@@ -28,11 +26,13 @@ async def turn_off(args):
     devices = await get_devices(args)
     await parallel_run(lambda x: x.set_power(False), devices)
 
+
 @command(name="on")
 async def turn_on(args):
     """Turn off the device(s)"""
     devices = await get_devices(args)
     await parallel_run(lambda x: x.set_power(True), devices)
+
 
 @command(
     arg("color", type=str, help="HEX color value"),
@@ -49,8 +49,8 @@ async def set_color(args):
     except ValueError:
         print("Invalid hex color")
         return
-    await parallel_run(
-        lambda x: x.set_color(dorgb_color), devices)
+    await parallel_run(lambda x: x.set_color(dorgb_color), devices)
+
 
 @command(
     arg("kelvin", type=int, help="Kelvin color temperature"),
@@ -62,5 +62,4 @@ async def set_white(args):
     white = to_dowhite(args.kelvin)
     white = apply_brightness(white, args.brightness)
     devices = await get_devices(args)
-    await parallel_run(
-        lambda x: x.set_white(white), devices)
+    await parallel_run(lambda x: x.set_white(white), devices)

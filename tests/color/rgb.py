@@ -1,4 +1,5 @@
 """DoHome RGB color helpers tests"""
+
 import pytest
 from dohome.color.rgb import (
     to_dorgb,
@@ -18,6 +19,7 @@ def test_to_dorgb():
         to_dorgb((256, 0, 0))
     with pytest.raises(ValueError):
         to_dorgb((-1, 0, 0))
+
 
 def test_from_dorgb():
     """Test from_dorgb function"""

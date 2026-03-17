@@ -1,9 +1,11 @@
 """DoHome color brightness helpers tests"""
+
 import pytest
 from dohome.color.brightness import (
     scale_by_uint8,
     apply_brightness,
 )
+
 
 def test_scale_by_uint8():
     """Test scale_by_uint8 function"""
@@ -12,6 +14,7 @@ def test_scale_by_uint8():
     assert scale_by_uint8(5000, 128) == 2509
     assert scale_by_uint8(200, 100) == 78
     assert scale_by_uint8(200, 0) == 0
+
 
 def test_apply_brightness():
     """Test apply_brightness function"""

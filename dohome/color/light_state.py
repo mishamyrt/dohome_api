@@ -1,4 +1,5 @@
 """DoHome light state"""
+
 from typing import TypedDict
 from enum import Enum
 
@@ -8,18 +9,25 @@ from .rgb import RGBColor, from_dorgb
 from .int import UInt8, doint_to_uint8
 from .white import from_dowhite
 
+
 class LightMode(Enum):
     """Light mode"""
+
     RGB = "rgb"
     WHITE = "white"
 
-ParsedState = TypedDict("ParsedState", {
-    "is_on": bool,
-    "brightness": UInt8,
-    "mode": LightMode,
-    "color": RGBColor,
-    "temperature": int
-})
+
+ParsedState = TypedDict(
+    "ParsedState",
+    {
+        "is_on": bool,
+        "brightness": UInt8,
+        "mode": LightMode,
+        "color": RGBColor,
+        "temperature": int,
+    },
+)
+
 
 def parse_state(res: LightState) -> ParsedState:
     """Reads high-level state from the device"""
@@ -46,5 +54,5 @@ def parse_state(res: LightState) -> ParsedState:
         "brightness": brightness,
         "mode": mode,
         "color": rgb_color,
-        "temperature": temperature
+        "temperature": temperature,
     }

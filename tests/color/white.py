@@ -1,4 +1,5 @@
 """DoHome white temperature helpers tests"""
+
 import pytest
 from dohome.color.white import (
     KELVIN_MAX,
@@ -6,6 +7,7 @@ from dohome.color.white import (
     to_dowhite,
     from_dowhite,
 )
+
 
 def test_to_dowhite():
     """Test to_dowhite function"""

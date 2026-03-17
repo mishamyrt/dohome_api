@@ -1,4 +1,5 @@
 """UDP Broadcast Transport"""
+
 import asyncio
 import socket
 from collections import deque
@@ -8,8 +9,10 @@ from .utils import get_discovery_host
 
 _Address = tuple[str, int]
 
+
 class UDPBroadcast(BroadcastAPITransport):
     """UDP Broadcast Transport"""
+
     _address: _Address
     _read_timeout: float
 
@@ -21,7 +24,7 @@ class UDPBroadcast(BroadcastAPITransport):
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.sock.bind(('', listen_port))
+        self.sock.bind(("", listen_port))
         self.sock.setblocking(False)
 
         self.receive_queue = deque()

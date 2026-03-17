@@ -8,12 +8,14 @@ KELVIN_MIN = 3000
 KELVIN_MAX = 6400
 _KELVIN_DELTA = KELVIN_MAX - KELVIN_MIN
 
+
 def assert_kelvin(value: int):
     """Asserts kelvin value. Raises ValueError if assertion fails"""
     if not isinstance(value, int):
         raise ValueError(f"Invalid kelvin value: {value}")
     if value < KELVIN_MIN or value > KELVIN_MAX:
         raise ValueError(f"Invalid kelvin value. Out of range: {value}")
+
 
 def from_dowhite(value: DoWhite, brightness: int) -> int:
     """Converts DoIT value to kelvin"""
@@ -25,6 +27,7 @@ def from_dowhite(value: DoWhite, brightness: int) -> int:
     yellow = (yellow / brightness) * 255
     percent = yellow / DO_INT_MAX
     return math.ceil(percent * _KELVIN_DELTA) + KELVIN_MIN
+
 
 def to_dowhite(kelvin: int) -> DoWhite:
     """Converts kelvin to DoIT value"""

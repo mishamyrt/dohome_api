@@ -1,4 +1,5 @@
 """DoIT protocol operation formatter"""
+
 from __future__ import annotations
 import json
 from enum import Enum
@@ -10,9 +11,11 @@ from dohome.exc import (
 )
 from .constants import Command, DatagramCommand, ResponseCode
 
+
 def _dump_minified_json(data: dict | list) -> str:
     """Formats minified JSON string"""
-    return json.dumps(data, separators=(',', ':'))
+    return json.dumps(data, separators=(",", ":"))
+
 
 def format_command(cmd: Command, **kwargs) -> str:
     """Formats DoIT command request"""
@@ -23,10 +26,12 @@ def format_command(cmd: Command, **kwargs) -> str:
         req[key] = value
     return _dump_minified_json(req)
 
+
 def decode_message(res: bytes) -> dict:
     """Formats DoIT response"""
     data = res.decode("utf-8")
     return json.loads(data)
+
 
 def assert_response(res: dict, cmd: Command):
     """Asserts DoIT response. Raises ValueError if assertion fails"""
@@ -41,6 +46,7 @@ def assert_response(res: dict, cmd: Command):
     if res_code != ResponseCode.OK:
         raise ResponseCodeInvalid(res_code.value, res_code.name)
 
+
 def format_datagram(req: dict) -> str:
     """Formats DoIT datagram request"""
     params = []
@@ -53,6 +59,7 @@ def format_datagram(req: dict) -> str:
     datagram = "&".join(params)
     return datagram
 
+
 def format_datagram_command(cmd: DatagramCommand, **kwargs) -> str:
     """Formats DoIT datagram command request"""
     req = {
@@ -61,6 +68,7 @@ def format_datagram_command(cmd: DatagramCommand, **kwargs) -> str:
     for key, value in kwargs.items():
         req[key] = value
     return format_datagram(req)
+
 
 def decode_datagram(res: bytes) -> dict:
     """Formats DoIT datagram response"""

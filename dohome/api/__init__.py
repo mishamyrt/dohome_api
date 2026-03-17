@@ -1,4 +1,5 @@
 """DoIT protocol"""
+
 from .constants import *
 from .types import *
 from .message import (

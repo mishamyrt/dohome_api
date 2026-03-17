@@ -1,4 +1,5 @@
 """Describe handlers for the DoHome CLI"""
+
 from __future__ import annotations
 from arrrgs import command
 
@@ -9,10 +10,12 @@ from .batch import get_devices, parallel_run
 
 _Description = tuple[HardwareInfo, ParsedState]
 
+
 async def _describe_client(device: APIClient) -> tuple[_Description]:
     info = await device.get_device_info()
     raw_state = await device.get_state()
     return parse_hardware_info(info["dev_id"]), parse_state(raw_state)
+
 
 @command()
 async def describe(args):
@@ -28,13 +31,13 @@ async def describe(args):
         print(f" - Mac: {info['mac']}")
         print(f" - Type: {info['type'].name}")
         print(f" - Enabled: {state['is_on']}")
-        if not state['is_on']:
+        if not state["is_on"]:
             continue
         print(f" - Mode: {state['mode'].name}")
         print(f" - Brightness: {state['brightness']}")
-        if state['mode'] == LightMode.RGB:
+        if state["mode"] == LightMode.RGB:
             print(f" - Color: {state['color']}")
-        elif state['mode'] == LightMode.WHITE:
+        elif state["mode"] == LightMode.WHITE:
             print(f" - White temperature: {state['temperature']}")
         else:
             print(f" - Unknown mode: {state['mode']}")

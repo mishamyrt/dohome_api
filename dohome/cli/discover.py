@@ -5,6 +5,7 @@ from dohome.api import parse_hardware_info
 
 from .batch import discover_devices
 
+
 @command()
 async def discover():
     """Manifest creation"""
@@ -15,4 +16,4 @@ async def discover():
     print(f"Found {len(devices)} devices")
     for device in devices:
         info = parse_hardware_info(device["device_id"])
-        print(f"{device["sta_ip"]} {info['mac']} {info['type'].name}")
+        print(f"{device['sta_ip']} {info['mac']} {info['type'].name}")

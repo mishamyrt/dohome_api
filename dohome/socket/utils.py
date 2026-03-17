@@ -1,5 +1,7 @@
 """DoIT sockets utils"""
+
 from socket import getfqdn, gethostname, gethostbyname_ex
+
 
 def apply_mask(local_address: str, mask: str) -> str:
     """Applies the netmask to the /24 address"""
@@ -16,6 +18,7 @@ def apply_mask(local_address: str, mask: str) -> str:
             result_address += "255"
         index += 1
     return result_address
+
 
 def get_discovery_host() -> str:
     """Finds discovery host"""
