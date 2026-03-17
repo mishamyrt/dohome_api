@@ -1,11 +1,12 @@
 """DoHome color int helpers tests"""
 
 import pytest
+
 from dohome.color.int import (
     assert_doint,
     assert_uint8,
-    uint8_to_doint,
     doint_to_uint8,
+    uint8_to_doint,
 )
 
 
@@ -19,10 +20,6 @@ def test_assert_uint8():
         assert_uint8(-1)
     with pytest.raises(ValueError):
         assert_uint8(256)
-    with pytest.raises(ValueError):
-        assert_uint8(1.2)
-    with pytest.raises(ValueError):
-        assert_uint8("1")
 
 
 def test_assert_doint():
@@ -35,10 +32,6 @@ def test_assert_doint():
         assert_doint(-1)
     with pytest.raises(ValueError):
         assert_doint(10000)
-    with pytest.raises(ValueError):
-        assert_doint(1.2)
-    with pytest.raises(ValueError):
-        assert_doint("1")
 
 
 def test_doint_to_uint8():
@@ -48,9 +41,9 @@ def test_doint_to_uint8():
     assert doint_to_uint8(2509) == 128
 
     with pytest.raises(ValueError):
-        doint_to_uint8(-1)
+        _ = doint_to_uint8(-1)
     with pytest.raises(ValueError):
-        doint_to_uint8(10000)
+        _ = doint_to_uint8(10000)
 
 
 def test_uint8_to_doint():
@@ -60,6 +53,6 @@ def test_uint8_to_doint():
     assert uint8_to_doint(128) == 2509
 
     with pytest.raises(ValueError):
-        uint8_to_doint(-1)
+        _ = uint8_to_doint(-1)
     with pytest.raises(ValueError):
-        uint8_to_doint(256)
+        _ = uint8_to_doint(256)

@@ -1,9 +1,12 @@
 """DoHome color scale helpers"""
 
 from __future__ import annotations
+
 from typing import TypeVar
+
 from dohome.api import DoRGB, DoWhite
-from .int import assert_uint8, UInt8
+
+from .int import UInt8, assert_uint8
 
 
 def scale_by_uint8(value: int, scale: UInt8) -> UInt8:
@@ -21,4 +24,4 @@ def apply_brightness(values: T, scale: UInt8) -> T:
 
     assert_uint8(scale)
     scaled_values = map(lambda x: scale_by_uint8(x, scale), values)
-    return tuple(scaled_values)
+    return tuple(scaled_values)  # pyright: ignore[reportReturnType]

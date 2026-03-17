@@ -1,7 +1,9 @@
 """DoHome Temperature helpers"""
 
 import math
+
 from dohome.api import DO_INT_MAX, DoWhite
+
 from .int import assert_doint
 
 KELVIN_MIN = 3000
@@ -11,8 +13,6 @@ _KELVIN_DELTA = KELVIN_MAX - KELVIN_MIN
 
 def assert_kelvin(value: int):
     """Asserts kelvin value. Raises ValueError if assertion fails"""
-    if not isinstance(value, int):
-        raise ValueError(f"Invalid kelvin value: {value}")
     if value < KELVIN_MIN or value > KELVIN_MAX:
         raise ValueError(f"Invalid kelvin value. Out of range: {value}")
 

@@ -1,12 +1,12 @@
 """DoHome light state"""
 
-from typing import TypedDict
 from enum import Enum
+from typing import TypedDict
 
 from dohome.api import LightState
 
-from .rgb import RGBColor, from_dorgb
 from .int import UInt8, doint_to_uint8
+from .rgb import RGBColor, from_dorgb
 from .white import from_dowhite
 
 

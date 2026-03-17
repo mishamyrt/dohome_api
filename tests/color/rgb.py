@@ -1,9 +1,10 @@
 """DoHome RGB color helpers tests"""
 
 import pytest
+
 from dohome.color.rgb import (
-    to_dorgb,
     from_dorgb,
+    to_dorgb,
 )
 
 
@@ -16,9 +17,9 @@ def test_to_dorgb():
     assert to_dorgb((128, 128, 128)) == (2509, 2509, 2509)
 
     with pytest.raises(ValueError):
-        to_dorgb((256, 0, 0))
+        _ = to_dorgb((256, 0, 0))
     with pytest.raises(ValueError):
-        to_dorgb((-1, 0, 0))
+        _ = to_dorgb((-1, 0, 0))
 
 
 def test_from_dorgb():
@@ -30,6 +31,6 @@ def test_from_dorgb():
     assert from_dorgb((2509, 2509, 2509)) == (128, 128, 128)
 
     with pytest.raises(ValueError):
-        from_dorgb((5001, 0, 0))
+        _ = from_dorgb((5001, 0, 0))
     with pytest.raises(ValueError):
-        from_dorgb((-1, 0, 0))
+        _ = from_dorgb((-1, 0, 0))

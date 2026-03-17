@@ -1,6 +1,6 @@
 """DoHome light state helpers tests"""
 
-from dohome.color.light_state import parse_state, LightMode
+from dohome.color.light_state import LightMode, parse_state
 
 
 def test_parse_state():

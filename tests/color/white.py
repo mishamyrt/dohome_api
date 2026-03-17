@@ -1,11 +1,12 @@
 """DoHome white temperature helpers tests"""
 
 import pytest
+
 from dohome.color.white import (
     KELVIN_MAX,
     KELVIN_MIN,
-    to_dowhite,
     from_dowhite,
+    to_dowhite,
 )
 
 
@@ -16,9 +17,9 @@ def test_to_dowhite():
     assert to_dowhite(5000) == (2941, 2059)
 
     with pytest.raises(ValueError):
-        to_dowhite(KELVIN_MAX + 1)
+        _ = to_dowhite(KELVIN_MAX + 1)
     with pytest.raises(ValueError):
-        to_dowhite(KELVIN_MIN - 1)
+        _ = to_dowhite(KELVIN_MIN - 1)
 
 
 def test_from_dowhite():
@@ -31,12 +32,12 @@ def test_from_dowhite():
     assert from_dowhite((0, 1000), 128) == 3000
 
     with pytest.raises(ValueError):
-        from_dowhite((5001, 0), 255)
+        _ = from_dowhite((5001, 0), 255)
     with pytest.raises(ValueError):
-        from_dowhite((0, 5001), 255)
+        _ = from_dowhite((0, 5001), 255)
     with pytest.raises(ValueError):
-        from_dowhite((5000, 5000), 255)
+        _ = from_dowhite((5000, 5000), 255)
     with pytest.raises(ValueError):
-        from_dowhite((-1, 0), 255)
+        _ = from_dowhite((-1, 0), 255)
     with pytest.raises(ValueError):
-        from_dowhite((0, -1), 255)
+        _ = from_dowhite((0, -1), 255)

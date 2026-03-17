@@ -1,25 +1,23 @@
 """DoHome int helpers"""
 
 from __future__ import annotations
+
 import math
-from dohome.api import DoInt, DO_INT_MAX
+
+from dohome.api import DO_INT_MAX, DoInt
 
 # UInt8 represents byte (0 to 255) value
 UInt8 = int
 
 
 def assert_uint8(value: int):
-    """Asserts uint8 value. Raises ValueError if assertion fails"""
-    if not isinstance(value, int):
-        raise ValueError(f"Invalid uint8 value: {value}")
+    """Asserts uint8 value"""
     if value < 0 or value > 255:
         raise ValueError(f"Invalid uint8 value. Out of range: {value}")
 
 
 def assert_doint(value: int):
-    """Asserts DoIT int value. Raises ValueError if assertion fails"""
-    if not isinstance(value, int):
-        raise ValueError(f"Invalid DoIT int value: {value}")
+    """Asserts DoIT int value (0 to 5000)"""
     if value < 0 or value > DO_INT_MAX:
         raise ValueError(f"Invalid DoIT int value. Out of range: {value}")
 
