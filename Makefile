@@ -40,6 +40,10 @@ lint:
 	uv run ruff check dohome tests
 	uv run pylint dohome tests
 
+.PHONY: fmt
+fmt:
+	uv run ruff format dohome tests
+
 .PHONY: test
 test:
 	uv run pytest -o log_cli=true -vv tests/**/*.py
