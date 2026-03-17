@@ -1,19 +1,16 @@
 """DoIT protocol"""
 
+from .client import APIClient
 from .constants import *
-from .types import *
+from .discover import discover
+from .hardware import HardwareInfo, parse_hardware_info
 from .message import (
-    format_command,
-    decode_message,
-    decode_datagram,
     assert_response,
+    decode_datagram,
+    decode_message,
+    format_command,
     format_datagram,
     format_datagram_command,
 )
-from .client import APIClient
 from .transport import APITransport, BroadcastAPITransport
-from .dgram_client import (
-    DatagramClient,
-    discover,
-)
-from .hardware import parse_hardware_info, HardwareInfo
+from .types import *

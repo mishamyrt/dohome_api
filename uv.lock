@@ -250,11 +250,11 @@ name = "dohome-api"
 source = { editable = "." }
 dependencies = [
     { name = "aiodatagram" },
-    { name = "arrrgs" },
 ]
 
 [package.optional-dependencies]
 dev = [
+    { name = "arrrgs" },
     { name = "build" },
     { name = "packaging" },
     { name = "pylint" },
@@ -268,7 +268,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aiodatagram", specifier = "==0.0.2" },
-    { name = "arrrgs", specifier = ">=3.0.0" },
+    { name = "arrrgs", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "build", marker = "extra == 'dev'", specifier = "==1.2.2" },
     { name = "packaging", marker = "extra == 'dev'", specifier = "==24.2" },
     { name = "pylint", marker = "extra == 'dev'", specifier = "==3.3.3" },
