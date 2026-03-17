@@ -1,10 +1,10 @@
 .PHONY: clean
 
 VERSION = 1.1.0
+PYTHON_VERSION = 3.13
+
 DIST_PATH = ./dist
-PYTHON_BIN = python3.13
-VENV_PATH = ./venv
-VENV = . $(VENV_PATH)/bin/activate;
+VENV_PATH = ./.venv
 
 SRC := \
 	$(wildcard dohome_api/*/*.py) \
@@ -12,7 +12,7 @@ SRC := \
 
 .PHONY: publish
 publish: clean build
-	$(VENV) python3 -m twine upload --repository pypi dist/*
+	uv run -m twine upload --repository pypi dist/*
 	git add Makefile
 	git commit -m "chore: release v$(VERSION)"
 	git tag "v$(VERSION)"
@@ -23,31 +23,31 @@ publish: clean build
 clean:
 	rm -rf *.egg-info
 	rm -rf build
-	rm -rf dist
+	rm -rf "$(DIST_PATH)"
+	rm -rf "$(VENV_PATH)"
 
 .PHONY: build
 build:
 	echo "$(VERSION)" > .version
-	$(VENV) python -m build
+	uv run -m build
 
 .PHONY: install
 install:
-	$(VENV) pip install .
-	$(VENV) pipx install .
+	uv pip install .
 
 .PHONY: lint
 lint:
-	$(VENV) ruff check dohome tests
-	$(VENV) pylint dohome tests
+	uv run ruff check dohome tests
+	uv run pylint dohome tests
 
 .PHONY: test
 test:
-	$(VENV) pytest -o log_cli=true -vv tests/**/*.py
+	uv run pytest -o log_cli=true -vv tests/**/*.py
 
 .PHONY: configure
 configure:
 	rm -rf $(VENV_PATH)
-	$(PYTHON_BIN) -m venv $(VENV_PATH)
-	$(VENV) pip install -r requirements.txt
+	uv venv --python $(PYTHON_VERSION)
+	uv pip install -e ".[dev]"
 	make build
 	make install

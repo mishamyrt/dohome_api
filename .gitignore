@@ -1,6 +1,8 @@
 __pycache__
-/venv
 *.egg-info
 /build
 /dist
 .version
+.venv
+.ruff_cache
+.pytest_cache
