@@ -10,33 +10,40 @@ MESSAGE_MAX_SIZE = 256
 PORT_TCP = 5555
 PORT_UDP = 6091
 
+
 class Command(IntEnum):
     """DoIT protocol command codes"""
+
     REBOOT = 3
     GET_DEVICE_INFO = 4
     SET_STATE = 6
     GET_STATE = 25
     SET_EFFECT = 7
     SCAN_WIFI = 1
-    SET_WIFI_CREDENTIALS = 2
-    GET_WIFI_CREDENTIALS = 16
+    WIFI_CREDENTIALS = 16
     GET_TIME = 9
     SET_TIME = 10
 
+
 class DatagramCommand(StrEnum):
     """DoIT protocol command codes"""
+
     PING = "ping"
     PONG = "pong"
     CTRL = "ctrl"
 
+
 class DeviceType(StrEnum):
     """DoIT device types"""
+
     RGBW_BULB = "DT-WYRGB"
     WHITE_BULB = "DT-WY"
     LED_STRIP = "STRIPE"
 
+
 class Effect(IntEnum):
     """DoIT light effect codes"""
+
     SEVEN_GRADIENT = 1
     RED_GRADIENT = 2
     GREEN_GRADIENT = 3
@@ -65,8 +72,10 @@ class Effect(IntEnum):
     RGB_JUMP = 26
     RGB_STROBE = 27
 
+
 class ResponseCode(IntEnum):
     """DoIT protocol response codes"""
+
     OK = 0
     SCAN_FAILED = 1
     SCAN_TIMEOUT = 2

@@ -1,22 +1,26 @@
 """DoIT API client"""
+
 from __future__ import annotations
-from .transport import APITransport
+
 from .constants import Command, Effect
-from .message import format_command, decode_message, assert_response
+from .message import assert_response, decode_message, format_command
+from .transport import APITransport
 from .types import (
-    DoWhite,
+    BaseResponse,
+    DeviceInfo,
     DoRGB,
     DoTime,
-    DeviceInfo,
-    LightState,
-    BaseResponse,
-    SetWiFiCredentialsParams,
+    DoWhite,
     GetWiFiCredentialsResponse,
+    LightState,
     SetLightStateParams,
+    SetWiFiCredentialsParams,
 )
+
 
 class APIClient:
     """DoIT API client"""
+
     _transport: APITransport
 
     def __init__(self, transport: APITransport):
@@ -62,31 +66,17 @@ class APIClient:
 
     async def set_wifi_credentials(self, ssid: str, password: str) -> None:
         """Sets WiFi credentials to the device"""
-        req: SetWiFiCredentialsParams = {
-            "ssid": ssid,
-            "password": password
-        }
-        await self._send_command(Command.SET_WIFI_CREDENTIALS, **req)
+        req: SetWiFiCredentialsParams = {"ssid": ssid, "pass": password}
+        await self._send_command(Command.WIFI_CREDENTIALS, **req)
 
     async def get_wifi_credentials(self) -> GetWiFiCredentialsResponse:
         """Reads WiFi credentials from the device"""
-        return await self._send_command(Command.GET_WIFI_CREDENTIALS)
+        return await self._send_command(Command.WIFI_CREDENTIALS)
 
-    async def _set_color_state( # pylint: disable=too-many-positional-arguments
-            self,
-            r=0,
-            g=0,
-            b=0,
-            m=0,
-            w=0,
-            on=None) -> None:
-        kwargs: SetLightStateParams = {
-            "r": r,
-            "g": g,
-            "b": b,
-            "m": m,
-            "w": w
-        }
+    async def _set_color_state(  # pylint: disable=too-many-positional-arguments
+        self, r=0, g=0, b=0, m=0, w=0, on=None
+    ) -> None:
+        kwargs: SetLightStateParams = {"r": r, "g": g, "b": b, "m": m, "w": w}
         if on is not None:
             kwargs["on"] = on
 
