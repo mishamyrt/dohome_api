@@ -38,6 +38,7 @@ class DoLightState(TypedDict):
 
 
 def is_doit_light_state(x: DoDict) -> TypeGuard[DoLightState]:
+    """Check if a dictionary is a valid Doit light state."""
     return (
         isinstance(x["r"], int)
         and is_doint(x["r"])
