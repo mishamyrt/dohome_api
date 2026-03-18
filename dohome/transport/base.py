@@ -1,19 +1,19 @@
-"""DoIT API transport"""
+"""Doit API transport"""
 
 from abc import ABC, abstractmethod
 
 
 class APITransport(ABC):
-    """DoIT API transport interface"""
+    """Doit API transport interface"""
 
     @abstractmethod
     async def send(self, payload: bytes) -> bytes:
-        """Sends data to DoIT API device"""
+        """Sends data to Doit API device"""
 
 
 class BroadcastAPITransport(ABC):
-    """DoIT API broadcast transport interface"""
+    """Doit API broadcast transport interface"""
 
     @abstractmethod
     async def send(self, payload: bytes) -> list[bytes]:
-        """Sends data to DoIT API devices"""
+        """Sends data to Doit API devices"""

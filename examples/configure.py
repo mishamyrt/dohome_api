@@ -1,7 +1,8 @@
 from asyncio import run
 from os import environ
 
-from dohome import APIClient, TCPStream
+from dohome.api import APIClient
+from dohome.transport import TCPStream
 
 
 async def main():
@@ -15,8 +16,8 @@ async def main():
     client = APIClient(stream)
     # Check connection
     try:
-        await client.get_state()
-    except Exception as e:
+        _ = await client.get_device_info()
+    except Exception as _:
         print("Failed to connect to the device")
         print("Make sure your computer is connected to the device access point")
         exit(1)

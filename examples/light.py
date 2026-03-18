@@ -2,13 +2,15 @@
 
 import asyncio
 
-from dohome import APIClient, TCPStream, UDPBroadcast, discover, to_dorgb, apply_brightness
+from dohome.api import APIClient, discover
+from dohome.transport import TCPStream, UDPBroadcast
+from dohome.types.constants import KELVIN_MIN
 
 
 async def main():
     broadcast = UDPBroadcast()
     devices = await discover(broadcast)
-    broadcast.close()
+    _ = broadcast.close()
 
     if not devices:
         print("No devices found")
@@ -20,18 +22,18 @@ async def main():
 
     print("Turning on")
     await client.set_power(True)
-    await asyncio.sleep(1)
+    await asyncio.sleep(2)
 
     print("Setting color to red at 50% brightness")
-    color = to_dorgb((255, 0, 0))
-    color = apply_brightness(color, 128)
-    await client.set_color(color)
+    await client.set_color((255, 0, 0), 128)
     await asyncio.sleep(2)
 
     print("Setting color to teal at full brightness")
-    color = to_dorgb((0, 200, 180))
-    color = apply_brightness(color, 255)
-    await client.set_color(color)
+    await client.set_color((0, 200, 180), 255)
+    await asyncio.sleep(2)
+
+    print("Setting warmest white at 80%")
+    await client.set_white(KELVIN_MIN, 204)
     await asyncio.sleep(2)
 
     print("Turning off")

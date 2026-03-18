@@ -1,6 +1,6 @@
-"""DoIT sockets utils"""
+"""Doit sockets utils"""
 
-from socket import getfqdn, gethostname, gethostbyname_ex
+from socket import getfqdn, gethostbyname_ex, gethostname
 
 
 def apply_mask(local_address: str, mask: str) -> str:

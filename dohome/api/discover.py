@@ -1,23 +1,23 @@
-"""DoIT API broadcast client"""
+"""Doit API broadcast client"""
 
-from logging import getLogger
+from dohome.transport import BroadcastAPITransport
+from dohome.types.constants import DatagramCommand
+from dohome.types.dgram import DoPingResponse, is_doit_ping_response
 
-from .constants import DatagramCommand
 from .message import (
     decode_datagram,
     format_datagram,
 )
-from .transport import BroadcastAPITransport
-from .types import (
-    PingResponse,
-)
-
-_LOGGER = getLogger(__name__)
 
 
-async def discover(transport: BroadcastAPITransport) -> list[PingResponse]:
-    """Discovers DoIT API devices on the network"""
+async def discover(transport: BroadcastAPITransport) -> list[DoPingResponse]:
+    """Discovers Doit API devices on the network"""
     req = format_datagram({"cmd": DatagramCommand.PING}) + "\n"
     res = await transport.send(req.encode())
     dgrams = map(decode_datagram, res)
-    return list(dgrams)
+    pongs: list[DoPingResponse] = []
+    for dgram in dgrams:
+        if not is_doit_ping_response(dgram):
+            raise ValueError("Invalid datagram response", dgram)
+        pongs.append(dgram)
+    return pongs

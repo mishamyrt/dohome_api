@@ -40,6 +40,10 @@ lint:
 	uv run ruff check dohome tests
 	uv run pylint dohome tests
 
+.PHONY: type-check
+type-check:
+	uv run basedpyright
+
 .PHONY: fmt
 fmt:
 	uv run ruff format dohome tests

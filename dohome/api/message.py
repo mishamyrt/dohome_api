@@ -1,40 +1,44 @@
-"""DoIT protocol operation formatter"""
+"""Doit protocol operation formatter"""
 
 from __future__ import annotations
+
 import json
 from enum import Enum
+
 from dohome.exc import (
-    ResponseCodeNotFound,
-    ResponseCodeInvalid,
     CommandCodeInvalid,
     CommandCodeNotFound,
+    ResponseCodeInvalid,
+    ResponseCodeNotFound,
 )
-from .constants import Command, DatagramCommand, ResponseCode
+from dohome.types.common import DoDict
+from dohome.types.constants import Command, DatagramCommand, ResponseCode
 
 
-def _dump_minified_json(data: dict | list) -> str:
+def _dump_minified_json(data: dict[str, object] | list[int | str]) -> str:
     """Formats minified JSON string"""
     return json.dumps(data, separators=(",", ":"))
 
 
-def format_command(cmd: Command, **kwargs) -> str:
-    """Formats DoIT command request"""
-    req = {
+def format_command(cmd: Command, params: DoDict | None = None) -> str:
+    """Formats Doit command request"""
+    req: dict[str, object] = {
         "cmd": cmd.value,
     }
-    for key, value in kwargs.items():
-        req[key] = value
+    if params is not None:
+        for key, value in params.items():
+            req[key] = value
     return _dump_minified_json(req)
 
 
-def decode_message(res: bytes) -> dict:
-    """Formats DoIT response"""
+def decode_message[T](res: bytes) -> DoDict:
+    """Decodes Doit response"""
     data = res.decode("utf-8")
-    return json.loads(data)
+    return json.loads(data)  # pyright: ignore[reportAny]
 
 
-def assert_response(res: dict, cmd: Command):
-    """Asserts DoIT response. Raises ValueError if assertion fails"""
+def assert_response(res: DoDict, cmd: Command):
+    """Asserts Doit response"""
     if "cmd" not in res:
         raise CommandCodeNotFound(res, cmd.value, cmd.name)
     res_cmd = Command(res["cmd"])
@@ -47,37 +51,40 @@ def assert_response(res: dict, cmd: Command):
         raise ResponseCodeInvalid(res_code.value, res_code.name)
 
 
-def format_datagram(req: dict) -> str:
-    """Formats DoIT datagram request"""
-    params = []
-    for key, value in req.items():
+def format_datagram(req: DoDict) -> str:
+    """Formats Doit datagram request"""
+    params: list[str] = []
+    for key, value in req.items():  # pyright: ignore[reportAssignmentType]
         if isinstance(value, list | dict):
             value = _dump_minified_json(value)
         elif isinstance(value, Enum):
-            value = value.value
+            value: int | str = value.value  # pyright: ignore[reportAny]
         params.append(f"{key}={value}")
     datagram = "&".join(params)
     return datagram
 
 
-def format_datagram_command(cmd: DatagramCommand, **kwargs) -> str:
-    """Formats DoIT datagram command request"""
-    req = {
+def format_datagram_command(cmd: DatagramCommand, params: DoDict) -> str:
+    """Formats Doit datagram command request"""
+    req: DoDict = {
         "cmd": cmd.value,
     }
-    for key, value in kwargs.items():
-        req[key] = value
+    for key, value in params.items():
+        req[key] = value  # pyright: ignore[reportArgumentType]
     return format_datagram(req)
 
 
-def decode_datagram(res: bytes) -> dict:
-    """Formats DoIT datagram response"""
+def decode_datagram(res: bytes) -> DoDict:
+    """Decodes Doit datagram response"""
     data = res.decode("utf-8").strip()
     entries = map(lambda x: x.split("="), data.split("&"))
-    data = dict(entries)
-    for key, value in data.items():
+    res_dict: DoDict = dict(entries)
+    result: DoDict = {}
+    for key, value in res_dict.items():
         if value.startswith("{") or value.startswith("["):
-            data[key] = json.loads(value)
+            result[key] = json.loads(value)
         elif value.isdigit():
-            data[key] = int(value)
-    return data
+            result[key] = int(value)
+        else:
+            result[key] = value
+    return result

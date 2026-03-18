@@ -1,7 +1,10 @@
 """DoHome device discovery example"""
 
 from asyncio import run
-from dohome import discover, UDPBroadcast
+
+from dohome.api import discover
+from dohome.transport import UDPBroadcast
+
 
 async def main():
     """Example entrypoint"""
@@ -13,10 +16,11 @@ async def main():
 
     print(f"Found {len(devices)} devices")
     for device in devices:
-        print(f"{device['sta_ip']} {device['device_id']}")
+        print(f"{device['sta_ip']} - {device['device_id']}")
 
     # Close the UDP broadcast socket
-    broadcast.close()
+    _ = broadcast.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run(main())

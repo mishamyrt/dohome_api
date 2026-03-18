@@ -1,18 +1,17 @@
-"""DoIT protocol constants"""
+"""Doit protocol constants"""
 
 from enum import IntEnum, StrEnum
 
-# DoIT int value range
+# Doit int value range
 DO_INT_MAX = 5000
 
-MESSAGE_MAX_SIZE = 256
-
-PORT_TCP = 5555
-PORT_UDP = 6091
+KELVIN_MIN = 3000
+KELVIN_MAX = 6400
+KELVIN_DELTA = KELVIN_MAX - KELVIN_MIN
 
 
 class Command(IntEnum):
-    """DoIT protocol command codes"""
+    """Doit protocol command codes"""
 
     REBOOT = 3
     GET_DEVICE_INFO = 4
@@ -26,7 +25,7 @@ class Command(IntEnum):
 
 
 class DatagramCommand(StrEnum):
-    """DoIT protocol command codes"""
+    """Doit protocol command codes"""
 
     PING = "ping"
     PONG = "pong"
@@ -34,7 +33,7 @@ class DatagramCommand(StrEnum):
 
 
 class DeviceType(StrEnum):
-    """DoIT device types"""
+    """Doit device types"""
 
     RGBW_BULB = "DT-WYRGB"
     WHITE_BULB = "DT-WY"
@@ -42,7 +41,7 @@ class DeviceType(StrEnum):
 
 
 class Effect(IntEnum):
-    """DoIT light effect codes"""
+    """Doit light effect codes"""
 
     SEVEN_GRADIENT = 1
     RED_GRADIENT = 2
@@ -74,7 +73,7 @@ class Effect(IntEnum):
 
 
 class ResponseCode(IntEnum):
-    """DoIT protocol response codes"""
+    """Doit protocol response codes"""
 
     OK = 0
     SCAN_FAILED = 1
