@@ -99,7 +99,7 @@ class APIClient:
         req: DoSetEffectParams = {"index": effect.value}
         _ = await self._send_command(Command.SET_EFFECT, req)
 
-    async def _set_color_state(
+    async def _set_color_state(  # pylint: disable=too-many-positional-arguments
         self,
         r: DoInt = 0,
         g: DoInt = 0,

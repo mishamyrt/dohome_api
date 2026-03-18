@@ -31,7 +31,7 @@ def format_command(cmd: Command, params: DoDict | None = None) -> str:
     return _dump_minified_json(req)
 
 
-def decode_message[T](res: bytes) -> DoDict:
+def decode_message(res: bytes) -> DoDict:
     """Decodes Doit response"""
     data = res.decode("utf-8")
     return json.loads(data)  # pyright: ignore[reportAny]

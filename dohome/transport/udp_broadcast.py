@@ -1,5 +1,7 @@
 """UDP Broadcast Transport"""
 
+from __future__ import annotations
+
 import asyncio
 from collections import deque
 from socket import AF_INET, SO_BROADCAST, SOCK_DGRAM, SOL_SOCKET, socket

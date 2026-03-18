@@ -98,7 +98,7 @@ def dorgb_to_rgb(color: DoRGB) -> RGB:
 
 def kelvin_to_dowhite(kelvin: int) -> DoWhite:
     """Converts kelvin temperature to Doit white value pair"""
-    if not (KELVIN_MIN <= kelvin <= KELVIN_MAX):
+    if not KELVIN_MIN <= kelvin <= KELVIN_MAX:
         raise ValueError(f"Invalid kelvin value. Out of range: {kelvin}")
 
     percent = (kelvin - KELVIN_MIN) / KELVIN_DELTA
