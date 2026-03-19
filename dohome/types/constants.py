@@ -3,11 +3,11 @@
 from enum import IntEnum, StrEnum
 
 # Doit int value range
-DO_INT_MAX = 5000
+DO_INT_MAX: int = 5000
 
-KELVIN_MIN = 3000
-KELVIN_MAX = 6400
-KELVIN_DELTA = KELVIN_MAX - KELVIN_MIN
+KELVIN_MIN: int = 3000
+KELVIN_MAX: int = 6400
+KELVIN_DELTA: int = KELVIN_MAX - KELVIN_MIN
 
 
 class Command(IntEnum):
