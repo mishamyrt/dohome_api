@@ -52,6 +52,18 @@ asyncio.run(main())
 
 More examples (device info, Wi-Fi setup, state inspection) are available in the [`examples/`](./examples/) directory.
 
+## Provisioning
+
+You can use this library to perform the initial device setup without using the DoHome app.
+
+To do this:
+
+1. Clone this repository
+2. Install dependencies with `make configure` command
+3. Set the `DOHOME_SSID` and `DOHOME_PASSWORD` environment variables
+4. Connect to the light bulb's access point
+5. Run `uv run examples/configure.py`
+
 ## API Reference
 
 ### Discovery
