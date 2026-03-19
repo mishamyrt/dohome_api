@@ -1,6 +1,6 @@
 .PHONY: clean
 
-VERSION = 2.2.0
+VERSION = 2.2.1
 PYTHON_VERSION = 3.13
 
 DIST_PATH = ./dist
