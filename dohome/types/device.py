@@ -90,3 +90,11 @@ def parse_hardware_info(device_id: str) -> HardwareInfo:
         "type": DeviceType(device_type),
         "chip": chip,
     }
+
+
+def encode_device_id(info: HardwareInfo) -> str:
+    """Encodes a device info object into a device ID string."""
+    mac_parts = info["mac"].split(":")
+    mac = "".join(mac_parts)
+
+    return f"{mac}_{info['type']}_{info['chip']}"
