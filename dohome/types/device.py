@@ -1,9 +1,9 @@
 """Doit device types, model types, and conversions"""
 
+from enum import StrEnum
 from typing import TypedDict, TypeGuard
 
 from .common import DoDict
-from .constants import DeviceType
 from .primitives import DoBool, is_dobool
 
 
@@ -19,6 +19,14 @@ class DoDeviceInfo(TypedDict):
     repeater: DoBool  # 0 - disabled, 1 - enabled
     portal: DoBool  # 0 - disabled, 1 - enabled
     chip: str
+
+
+class DeviceType(StrEnum):
+    """Doit device types"""
+
+    RGBW_BULB = "DT-WYRGB"
+    WHITE_BULB = "DT-WY"
+    LED_STRIP = "STRIPE"
 
 
 class HardwareInfo(TypedDict):

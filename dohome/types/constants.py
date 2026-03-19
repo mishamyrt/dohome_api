@@ -32,14 +32,6 @@ class DatagramCommand(StrEnum):
     CTRL = "ctrl"
 
 
-class DeviceType(StrEnum):
-    """Doit device types"""
-
-    RGBW_BULB = "DT-WYRGB"
-    WHITE_BULB = "DT-WY"
-    LED_STRIP = "STRIPE"
-
-
 class Effect(IntEnum):
     """Doit light effect codes"""
 

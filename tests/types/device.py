@@ -1,7 +1,6 @@
 """Doit protocol parser tests"""
 
-from dohome.types.constants import DeviceType
-from dohome.types.device import parse_hardware_info
+from dohome.types.device import DeviceType, parse_hardware_info
 
 
 def test_parse_hardware_info():
